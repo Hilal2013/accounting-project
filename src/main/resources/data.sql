@@ -6,7 +6,7 @@
 --        ('2022-09-09 00:00:00', 1, false, '2022-09-09 00:00:00', 1, 'Employee');
 --
 --
--- -- insert into addresses(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
+-- insert into addresses(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
 --                       address_line1, address_line2, city, state, country, zip_code)
 -- values ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
 --         '7925 Jones Branch Dr, #3300', 'Tysons', 'Virginia', 'VA', 'United States', '22102-1234'),
