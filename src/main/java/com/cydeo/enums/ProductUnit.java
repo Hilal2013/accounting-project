@@ -1,5 +1,8 @@
 package com.cydeo.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum ProductUnit {
 //
 //    LBS - Value will be "Libre"
