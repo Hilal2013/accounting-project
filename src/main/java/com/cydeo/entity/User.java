@@ -27,8 +27,8 @@ public class User extends BaseEntity {
     private boolean enabled;
 
     @ManyToOne
-    private Role role; // many-to-one / will be seen under "role_id" column on the "users" table
+    private Role role;
 //    @ManyToOne
-//    private Company company; // many-to-one / will be seen under "company_id" column on the "users" table
+//    private Company company;
 
 }
