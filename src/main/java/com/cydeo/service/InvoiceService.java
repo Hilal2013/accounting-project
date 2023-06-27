@@ -10,9 +10,7 @@ public interface InvoiceService {
     InvoiceDTO update(InvoiceDTO invoice);
     List<InvoiceDTO> listAllInvoice();
 
-    InvoiceDTO findByInvoiceNo(String invoiceNo);
-
-    void delete(String invoiceNo);
+    void delete(Long id);
 
 }
 

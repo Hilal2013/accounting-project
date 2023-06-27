@@ -39,15 +39,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public void delete(Long id) {
+
+    }
+
 //    @Override
 //    public InvoiceDTO findByInvoiceNo(String invoiceNo) {
 //        return null;
 //    }
 
-    @Override
-    public void delete(String invoiceNo) {
 
-    }
 
 
 }
