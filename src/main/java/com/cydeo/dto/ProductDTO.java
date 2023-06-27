@@ -1,11 +1,9 @@
 package com.cydeo.dto;
 
-import jdk.jfr.Category;
+import com.cydeo.enums.ProductUnit;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProductDTO {
 
@@ -20,6 +18,13 @@ public class ProductDTO {
     private int quantityInStock;
     private int lowLimitAlert;
     private ProductUnit productUnit;
-    private CategoryDTO category;
+//    private CategoryDTO category;
 
+    public ProductDTO(Long id, String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
+        this.id = id;
+        this.name = name;
+        this.quantityInStock = quantityInStock;
+        this.lowLimitAlert = lowLimitAlert;
+        this.productUnit = productUnit;
+    }
 }
