@@ -1,12 +1,14 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.entity.Invoice;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +21,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         this.invoiceRepository = invoiceRepository;
         this.mapperUtil = mapperUtil;
     }
+
+    @Override
+    public InvoiceDTO findById(Long id) {
+        Optional<Invoice> invoice=invoiceRepository.findById(id);
+        return null;
+    }
+
     @Override
     public InvoiceDTO save(InvoiceDTO invoice) {
         return null;
