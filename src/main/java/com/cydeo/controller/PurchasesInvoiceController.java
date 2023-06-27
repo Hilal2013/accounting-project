@@ -18,7 +18,8 @@ public class PurchasesInvoiceController {
 
     @GetMapping("/create")
     public String cratePurchaseInvoices(Model model){
-        model.addAttribute("purchase",new InvoiceDTO());
+        model.addAttribute("newPurchaseInvoice",new InvoiceDTO());
+       // model.addAttribute("vendors",);
         return "/invoice/purchase-invoice-create";
     }
     @GetMapping("/list")
