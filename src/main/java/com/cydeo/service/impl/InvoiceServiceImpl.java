@@ -9,22 +9,22 @@ import java.util.List;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
     @Override
-    public InvoiceDTO save(InvoiceDTO invoice) {
+    public InvoiceDTO createInvoice() {
         return null;
     }
 
     @Override
-    public InvoiceDTO update(InvoiceDTO invoice) {
+    public InvoiceDTO updateInvoice() {
         return null;
     }
 
     @Override
-    public void delete(String invoiceNo) {
-
+    public List<InvoiceDTO> listAllInvoice() {
+        return null;
     }
 
     @Override
-    public List<InvoiceDTO> listAllInvoices() {
-        return null;
+    public void deleteInvoice(String invoiceNo) {
+
     }
 }

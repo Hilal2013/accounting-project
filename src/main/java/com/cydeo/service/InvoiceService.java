@@ -1,15 +1,16 @@
 package com.cydeo.service;
 
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.entity.Invoice;
 
 import java.util.List;
 
 public interface InvoiceService {
-    InvoiceDTO save(InvoiceDTO invoice);
-    InvoiceDTO update(InvoiceDTO invoice);
-    void delete(String invoiceNo);
+    InvoiceDTO createInvoice();
+    InvoiceDTO updateInvoice();
+    List<InvoiceDTO> listAllInvoice();
 
-    List<InvoiceDTO> listAllInvoices();
-
+    void deleteInvoice(String invoiceNo);
 
 }
+
