@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 
     @ManyToOne
     private Role role;
-//    @ManyToOne
-//    private Company company;
+    @ManyToOne
+    private Company company;
 
 }
