@@ -26,7 +26,7 @@ public class Product extends BaseEntity {
     @Column
     private int lowLimitAlert;
     @Enumerated
-    private ProductUnit productUnit;
+    private String productUnit;
 
     @JoinColumn(name = "category_id")
     @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
