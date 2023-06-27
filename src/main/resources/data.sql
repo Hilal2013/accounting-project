@@ -24,17 +24,17 @@ values ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
         'SouthWest Street', 'Puzzle Square', 'Los Angeles', 'California', 'United States', '65654-8989'),
        ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
         'OwerWest Street', 'Android Square', 'Los Angeles', 'Phoneix', 'United States', '65654-8989');;
--- insert into companies(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
---                       title, phone, website, address_id, company_status)
--- values ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
---         'CYDEO','+1 (652) 852-8888', 'https://www.cydeo.com', 1, 'ACTIVE'),
---        ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
---         'Green Tech','+1 (652) 852-3246', 'https://www.greentech.com', 2, 'ACTIVE'),
---        ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
---         'Blue Tech','+1 (215) 654-5268', 'https://www.bluetech.com', 3, 'ACTIVE'),
---        ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
---         'Red Tech','+1 (215) 846-2642', 'https://www.redtech.com', 4, 'PASSIVE');
---
+insert into companies(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
+                      title, phone, website, address_id, company_status)
+values ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
+        'CYDEO','+1 (652) 852-8888', 'https://www.cydeo.com', 1, 'ACTIVE'),
+       ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
+        'Green Tech','+1 (652) 852-3246', 'https://www.greentech.com', 2, 'ACTIVE'),
+       ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
+        'Blue Tech','+1 (215) 654-5268', 'https://www.bluetech.com', 3, 'ACTIVE'),
+       ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
+        'Red Tech','+1 (215) 846-2642', 'https://www.redtech.com', 4, 'PASSIVE');
+
 -- insert into users(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
 --                   username, password, firstname, lastname, phone, role_id, company_id, enabled)
 -- values
@@ -71,21 +71,21 @@ values ('2022-09-15 00:00:00', 1, false, '2022-09-15 00:00:00', 1,
 --  'admin@redtech.com', '$2a$10$nAB5j9G1c3JHgg7qzhiIXO7cqqr5oJ3LXRNQJKssDUwHXzDGUztNK',
 --  'John', 'Doe', '+1 (659) 756-1265', 2, 4, true);
 --
--- insert into clients_vendors(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
---                             client_vendor_type, client_vendor_name, phone, website, address_id, company_id)
--- values
--- -- COMPANY-2 / Green Tech
--- ('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'CLIENT','Orange Tech', '+1 (251) 321-4155', 'https://www.orange.com', 5, 2),
--- ('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'CLIENT','Ower Tech', '+1 (251) 321-4141', 'https://www.ower.com', 8, 2),
--- ('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'VENDOR','Photobug Tech', '+1 (652) 852-3246', 'https://www.photobug.com', 6, 2),
--- ('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'VENDOR','Wordtune Tech','+1 (652) 852-3246','https://www.wordtune.com', 7, 2),
--- -- COMPANY-3 / Blue Tech
--- ('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'CLIENT', 'Reallinks Tech', '+1 (652) 852-9544','https://www.reallinks.com', 3, 3),
--- ('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'VENDOR', 'Livetube Tech', '+1 (652) 852-2055','https://www.livetube.com', 4, 3),
--- ('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'CLIENT', 'Key Tech', '+1 (652) 852-7896','https://www.keytech.com', 1, 3),
--- ('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'VENDOR', 'Mod Tech', '+1 (652) 852-3648','https://www.modtech.com', 2, 3);
---
---
+insert into clients_vendors(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
+                            client_vendor_type, client_vendor_name, phone, website, address_id, company_id)
+values
+-- COMPANY-2 / Green Tech
+('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'CLIENT','Orange Tech', '+1 (251) 321-4155', 'https://www.orange.com', 5, 2),
+('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'CLIENT','Ower Tech', '+1 (251) 321-4141', 'https://www.ower.com', 8, 2),
+('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'VENDOR','Photobug Tech', '+1 (652) 852-3246', 'https://www.photobug.com', 6, 2),
+('2022-09-15T00:00',2, false,'2022-09-15T00:00',2,'VENDOR','Wordtune Tech','+1 (652) 852-3246','https://www.wordtune.com', 7, 2),
+-- COMPANY-3 / Blue Tech
+('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'CLIENT', 'Reallinks Tech', '+1 (652) 852-9544','https://www.reallinks.com', 3, 3),
+('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'VENDOR', 'Livetube Tech', '+1 (652) 852-2055','https://www.livetube.com', 4, 3),
+('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'CLIENT', 'Key Tech', '+1 (652) 852-7896','https://www.keytech.com', 1, 3),
+('2022-09-15T00:00',3, false,'2022-09-15T00:00',3,'VENDOR', 'Mod Tech', '+1 (652) 852-3648','https://www.modtech.com', 2, 3);
+
+
 -- insert into categories(insert_date_time, insert_user_id, is_deleted, last_update_date_time, last_update_user_id,
 --                        description, company_id)
 -- values
