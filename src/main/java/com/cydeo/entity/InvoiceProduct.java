@@ -23,11 +23,8 @@ public class InvoiceProduct extends BaseEntity {
     private int tax;
     private BigDecimal profitLoss;
     private int remainingQuantity;
-
-//    @ManyToOne
-//    private Invoice invoice;
-//
-//    @ManyToOne
-//    private Product product;
-
+    @ManyToOne
+    private Invoice invoice;
+    @ManyToOne
+    private Product product;
 }
