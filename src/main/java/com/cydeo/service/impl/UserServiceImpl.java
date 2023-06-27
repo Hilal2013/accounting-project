@@ -5,19 +5,24 @@ import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    private MapperUtil mapperUtil;
-    private UserRepository userRepository;
+    private final MapperUtil mapperUtil;
+    private final UserRepository userRepository;
 
-    @Override
-    public UserDTO findByUserName(String userName) {
-
-        User user = userRepository.findByUserName(userName);
-
-        return   mapperUtil.convert(user, new UserDTO());
+    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository) {
+        this.mapperUtil = mapperUtil;
+        this.userRepository = userRepository;
     }
 
+    @Override
+    public UserDTO findByUsername(String userName) {
 
+        User user = userRepository.findByUsername(userName);
+
+        return mapperUtil.convert(user, new UserDTO());
+    }
 }
