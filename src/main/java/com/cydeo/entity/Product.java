@@ -7,17 +7,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "products")
 public class Product extends BaseEntity {
-
-//    String name
-//    int quantityInStock
-//    int lowLimitAlert
-//    ProductUnit productUnit / enum
-//    Category category / many-to-one / will be seen under "category" column on the "products" table
 
     @Column
     private String name;
@@ -27,10 +22,10 @@ public class Product extends BaseEntity {
     private int lowLimitAlert;
     @Enumerated(EnumType.STRING)
     private ProductUnit productUnit;
+    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
-//    @JoinColumn(name = "category_id")
-//    @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
-//    private Category category;
     public Product(String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
         this.name = name;
         this.quantityInStock = quantityInStock;
