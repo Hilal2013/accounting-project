@@ -6,11 +6,13 @@ import com.cydeo.entity.Invoice;
 import java.util.List;
 
 public interface InvoiceService {
-    InvoiceDTO createInvoice();
-    InvoiceDTO updateInvoice();
+    InvoiceDTO save(InvoiceDTO invoice);
+    InvoiceDTO update(InvoiceDTO invoice);
     List<InvoiceDTO> listAllInvoice();
 
-    void deleteInvoice(String invoiceNo);
+    InvoiceDTO findByInvoiceNo(String invoiceNo);
+
+    void delete(String invoiceNo);
 
 }
 
