@@ -25,13 +25,13 @@ public class Product extends BaseEntity {
     private int quantityInStock;
     @Column
     private int lowLimitAlert;
-    @Enumerated
-    private String productUnit;
+    @Enumerated(EnumType.STRING)
+    private ProductUnit productUnit;
 
 //    @JoinColumn(name = "category_id")
 //    @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
 //    private Category category;
-    public Product(String name, int quantityInStock, int lowLimitAlert, String productUnit) {
+    public Product(String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
         this.name = name;
         this.quantityInStock = quantityInStock;
         this.lowLimitAlert = lowLimitAlert;
