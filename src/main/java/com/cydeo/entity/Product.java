@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "products")
 public class Product extends BaseEntity {
 
@@ -28,9 +27,10 @@ public class Product extends BaseEntity {
     private int lowLimitAlert;
     @Enumerated
     private ProductUnit productUnit;
-//    @Column()
-//    @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
-//    private Category category;
+
+    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
+    private Category category;
     public Product(String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
         this.name = name;
         this.quantityInStock = quantityInStock;
