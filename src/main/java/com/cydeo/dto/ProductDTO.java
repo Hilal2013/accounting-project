@@ -6,19 +6,12 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 public class ProductDTO {
-
-//          - Long id
-//          - String name
-//          - Integer quantityInStock
-//          - Integer lowLimitAlert
-//          - ProductUnit productUnit
-//          - CategoryDto category
     private Long id;
     private String name;
     private int quantityInStock;
     private int lowLimitAlert;
     private ProductUnit productUnit;
-//    private CategoryDTO category;
+    private CategoryDTO category;
 
     public ProductDTO(Long id, String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
         this.id = id;
