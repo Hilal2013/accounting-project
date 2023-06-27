@@ -1,8 +1,6 @@
 package com.cydeo.entity;
 
 import com.cydeo.enums.ProductUnit;
-import jdk.jfr.Category;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,9 +28,9 @@ public class Product extends BaseEntity {
     private int lowLimitAlert;
     @Enumerated
     private ProductUnit productUnit;
-    //@Column()
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //private Category category;
+//    @Column()
+//    @ManyToOne(fetch = FetchType.LAZY) // Category doesn't exist yet.
+//    private Category category;
     public Product(String name, int quantityInStock, int lowLimitAlert, ProductUnit productUnit) {
         this.name = name;
         this.quantityInStock = quantityInStock;
