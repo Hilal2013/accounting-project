@@ -14,10 +14,12 @@ public class PurchasesInvoiceController {
     @GetMapping("/create")
     public String cratePurchaseInvoices(Model model){
 
+
         return "/invoice/purchase-invoice-create";
     }
     @GetMapping("/list")
     public String listAllPurchaseInvoices(){
+
         return "/invoice/purchase-invoice-list";
     }
     @PostMapping("/update/{id}")
