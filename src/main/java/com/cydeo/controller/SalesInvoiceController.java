@@ -29,19 +29,25 @@ public class SalesInvoiceController {
         return "invoice/sales-invoice-list";
     }
 
-//    @GetMapping("/update/{id}")
-//    public String editSalesInvoice(@PathVariable Long id, Model model) {
-//        model.addAttribute("invoice", invoiceService.findById(id));
+    @GetMapping("/update/{id}")
+    public String editSalesInvoice(@PathVariable Long id, Model model) {
+        model.addAttribute("invoice", invoiceService.findById(id));
 //        model.addAttribute("clients", clientVendorService.listAllClientVendor());
-//        model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
+        model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
 //        model.addAttribute("products", productService.listAllProducts());
-//        return "invoice/sales-invoice-update";
-//    }
+        return "invoice/sales-invoice-update";
+    }
 
     @PostMapping("/update")
     public String updateSalesInvoice(@ModelAttribute("invoice")InvoiceDTO invoice) {
         invoiceService.update(invoice);
         return "redirect:invoice/sales-invoice-list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteSalesInvoiceById(@PathVariable Long id) {
+        invoiceService.delete(id);
+        return "redirect:/salesInvoices/list";
     }
 
 
