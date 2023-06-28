@@ -67,10 +67,10 @@ public class UserController {
 
 
 
-    @GetMapping("/update/{username}")
-    public String editUser(@PathVariable("username") String username, Model model) {
+    @GetMapping("/update/{id}")
+    public String editUser(@PathVariable("id") Long id, Model model) {
 
-        model.addAttribute("user", userService.findByUsername(username));
+        model.addAttribute("user", userService.findById(id));
         model.addAttribute("userRoles", roleService.listAllRoles());
 
         return "/user/user-update";
@@ -95,9 +95,11 @@ public class UserController {
 
     }
 
-    @GetMapping("/delete/{username}")
-    public String deleteUser(@PathVariable("username") String username) {
-        userService.delete(username);
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long id) {
+
+
+            userService.delete(id);
         return "redirect:/user/user-list";
     }
 

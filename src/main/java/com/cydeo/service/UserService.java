@@ -7,13 +7,16 @@ import java.util.List;
 public interface UserService {
 
     UserDTO findByUsername(String userName);
+
+    UserDTO findById(Long id);
+
     List<UserDTO> listAllUsers();
 
     void save(UserDTO user);
 
     UserDTO update(UserDTO user);
 
-    void delete(String username);
+    void delete(Long id);
 
 
 }
