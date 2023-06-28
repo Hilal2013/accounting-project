@@ -1,7 +1,9 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.InvoiceService;
@@ -24,9 +26,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO findById(Long id) {
-        Optional<Invoice> invoice=invoiceRepository.findById(id);
-        return null;
-    }
+
+            return mapperUtil.convert(invoiceRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Invoice couldn't find.")), new InvoiceDTO());
+        }
+
 
     @Override
     public InvoiceDTO save(InvoiceDTO invoice) {
@@ -49,14 +53,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public InvoiceDTO delete(Long id) {
+        Invoice invoice = invoiceRepository.findByIdAndIsDeleted(id, false);
+        InvoiceDTO invoiceDTO=mapperUtil.convert(invoice,new InvoiceDTO());
+        if(invoiceDTO.getInvoiceStatus().getValue().equals("Awaiting Approval")) {
+            invoice.setIsDeleted(true);
+            invoiceRepository.save(invoice);
+        }
+        return invoiceDTO;
     }
 
-//    @Override
-//    public InvoiceDTO findByInvoiceNo(String invoiceNo) {
-//        return null;
-//    }
+
 
 
 

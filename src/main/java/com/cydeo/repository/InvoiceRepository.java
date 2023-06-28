@@ -9,8 +9,5 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
 
 
-
-
-
-
+    Invoice findByIdAndIsDeleted(Long id,Boolean deleted);
 }

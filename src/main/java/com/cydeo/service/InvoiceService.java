@@ -11,7 +11,7 @@ public interface InvoiceService {
     InvoiceDTO update(InvoiceDTO invoice);
     List<InvoiceDTO> listAllInvoice();
 
-    void delete(Long id);
+    InvoiceDTO delete(Long id);
 
 }
 
