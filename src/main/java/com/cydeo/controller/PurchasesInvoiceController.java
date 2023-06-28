@@ -1,6 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -41,11 +42,25 @@ public class PurchasesInvoiceController {
     public String editPurchaseInvoices(@PathVariable("id") Long id, Model model){
         model.addAttribute("invoice",invoiceService.findById(id));
         //clientVendorService.listAllVendors();
+
         //productService.listAllProduct();
 
         return "/invoice/purchase-invoice-update";
 
    }
+    @GetMapping("/addInvoiceProduct/{id}")
+    public String addInvoiceProduct(@PathVariable("id")Long id, Model model){
+        model.addAttribute("newInvoiceProduct",new InvoiceProductDTO());
+    return "redirect:/invoice/purchase-invoice-update";
+
+    }
+    @PostMapping("/addInvoiceProduct/{id}")
+    public String addInvoiceProduct(@PathVariable("id")Long id,@ModelAttribute("newInvoiceProduct")InvoiceProductDTO invoiceProduct, Model model){
+
+        return "redirect:/invoice/purchase-invoice-update";
+
+    }
+
 
     @PostMapping("/update/{id}")
     public String updatePurchaseInvoices(@PathVariable("id") Long id,@ModelAttribute("invoice")InvoiceDTO invoice, Model model){
