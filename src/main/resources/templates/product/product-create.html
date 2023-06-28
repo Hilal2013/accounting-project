@@ -21,8 +21,7 @@
                                         <div class="tab-content">
                                             <div class="tab-pane fade mt-2 show active" id="account" role="tabpanel"
                                                  aria-labelledby="account-tab">
-                                                <form th:action="@{/products/create}"
-                                                      th:method="post" th:object="${newProduct}">
+                                                <form th:action="@{/products/create}" th:method="post" th:object= "${newProduct}" >
                                                     <div class="row justify-content-center">
                                                         <div class="col-12 col-md-4">
                                                             <div class="form-group">
