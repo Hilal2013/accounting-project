@@ -72,7 +72,7 @@ public class PurchasesInvoiceController {
     //@GetMapping("/delete/{id}")
     //@GetMapping("/approve/{id}")
     //@GetMapping("/print/{id}")
-    //@GetMapping("/removeInvoiceProduct/{invoiceId})
+    ///removeInvoiceProduct/{invoiceId}/{invoiceProductId}
 
 
 }
