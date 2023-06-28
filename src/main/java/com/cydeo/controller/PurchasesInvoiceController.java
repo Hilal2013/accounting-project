@@ -38,7 +38,7 @@ public class PurchasesInvoiceController {
     }
 
     @GetMapping("/update/{id}")
-    public String editPurchaseInvoices(@PathVariable("id") Long id,@ModelAttribute("vendors") Model model){
+    public String editPurchaseInvoices(@PathVariable("id") Long id, Model model){
         model.addAttribute("invoice",invoiceService.findById(id));
         //clientVendorService.listAllVendors();
         //productService.listAllProduct();
