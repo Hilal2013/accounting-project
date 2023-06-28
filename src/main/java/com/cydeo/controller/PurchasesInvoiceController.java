@@ -51,6 +51,7 @@ public class PurchasesInvoiceController {
     @GetMapping("/addInvoiceProduct/{id}")
     public String addInvoiceProduct(@PathVariable("id")Long id, Model model){
         model.addAttribute("newInvoiceProduct",new InvoiceProductDTO());
+       // model.addAttribute("invoiceProducts",invoiceProductService.listAllInvoiceProduct());
     return "redirect:/invoice/purchase-invoice-update";
 
     }
@@ -68,6 +69,10 @@ public class PurchasesInvoiceController {
         return "/invoice/purchase-invoice-update";
 
     }
+    //@GetMapping("/delete/{id}")
+    //@GetMapping("/approve/{id}")
+    //@GetMapping("/print/{id}")
+    //@GetMapping("/removeInvoiceProduct/{invoiceId})
 
 
 }
