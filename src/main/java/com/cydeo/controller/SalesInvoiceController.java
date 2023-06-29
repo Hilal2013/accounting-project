@@ -29,12 +29,26 @@ public class SalesInvoiceController {
         return "invoice/sales-invoice-list";
     }
 
+    @GetMapping("/create")
+    public String createSalesInvoice(Model model) {
+        model.addAttribute("newSalesInvoice", new InvoiceDTO());
+//        model.addAttribute("clients", clientVendorService.listAllClientVendor());
+        return "invoice/sales-invoice-create";
+    }
+
+    @PostMapping("create")
+    public String saveSalesInvoice(@ModelAttribute InvoiceDTO invoice) {
+        invoiceService.save(invoice);
+        return "invoice/sales-invoice-update";
+    }
+
     @GetMapping("/update/{id}")
     public String editSalesInvoice(@PathVariable Long id, Model model) {
         model.addAttribute("invoice", invoiceService.findById(id));
 //        model.addAttribute("clients", clientVendorService.listAllClientVendor());
         model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
 //        model.addAttribute("products", productService.listAllProducts());
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct());
         return "invoice/sales-invoice-update";
     }
 
@@ -56,8 +70,16 @@ public class SalesInvoiceController {
         return "redirect:/salesInvoices/list";
     }
 
+//    @GetMapping("addInvoiceProduct/{id}")
+//    public String addInvoiceProduct(@PathVariable Long id, Model model) {
+//
+//    }
 
-
+    @GetMapping("print/{id}")
+    public String printSalesInvoice(@PathVariable Long id) {
+//        invoiceService.print(id);
+        return "invoice/invoice_print";
+    }
 
 
 }
