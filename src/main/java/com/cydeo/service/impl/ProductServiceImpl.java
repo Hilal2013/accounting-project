@@ -44,6 +44,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public void update(ProductDTO dto){
+
+        Optional<Product> product = productRepository.findById(dto.getId());
+        Product convertedProduct = productMapper.convertToEntity(dto);
+        convertedProduct.setId(product.get().getId());
+        productRepository.save(convertedProduct);
+
+    }
+    @Override
     public ProductDTO findById(Long id) {
 
         Optional<Product> product = productRepository.findById(id);
@@ -65,4 +74,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
     }
+
+
+
 }
