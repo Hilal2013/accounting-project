@@ -53,4 +53,16 @@ public class ProductServiceImpl implements ProductService {
 
         return null;
     }
+
+    @Override
+    public void delete(Long id) {
+
+        Optional<Product> product = productRepository.findById(id);
+
+        if(product.isPresent()){
+            product.get().setIsDeleted(true);
+            productRepository.save(product.get());
+        }
+
+    }
 }

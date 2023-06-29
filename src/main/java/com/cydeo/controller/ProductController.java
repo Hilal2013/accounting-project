@@ -20,6 +20,7 @@ public class ProductController {
     public String createProduct(Model model){
 
         model.addAttribute("newProduct", new ProductDTO());
+        model.addAttribute("products", productService.listAllProducts());
 
         return "/product/product-create";
     }
@@ -29,7 +30,7 @@ public class ProductController {
 
         productService.save(product);
 
-        return "redirect:/product/product-create";
+        return "/product/product-create";
     }
 
     @GetMapping("/list")
@@ -49,5 +50,13 @@ public class ProductController {
 
     }
 
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable("id") Long id){
+
+        productService.delete(id);
+
+        return "redirect:/product/product-list";
+    }
 
 }
