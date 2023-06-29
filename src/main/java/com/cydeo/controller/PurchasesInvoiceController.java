@@ -2,8 +2,10 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
+import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.*;
 public class PurchasesInvoiceController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
-    //private final ProductService productService;
-    //private final ClientVendorService clientVendorService;
+    private final ProductService productService;
+    private final ClientVendorService clientVendorService;
 
-    public PurchasesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService) {
+    public PurchasesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
+        this.productService = productService;
+        this.clientVendorService = clientVendorService;
     }
     @GetMapping("/list")
     public String listAllPurchaseInvoices(Model model){
@@ -28,9 +32,9 @@ public class PurchasesInvoiceController {
 
     @GetMapping("/create")
     public String cratePurchaseInvoices(Model model){
-        model.addAttribute("newPurchaseInvoice",new InvoiceDTO());
-        // model.addAttribute("vendors",clientVendorService.listAllVendors());
-        //model.addAttribute("products", productService.listAllProducts());
+        model.addAttribute("newPurchaseInvoice",invoiceService.createNewPurchasesInvoice());
+        model.addAttribute("vendors",clientVendorService.getListOfClientVendors());
+       // model.addAttribute("products", productService.listAllProducts());
         return "/invoice/purchase-invoice-create";
     }
     @PostMapping("/create")
@@ -43,7 +47,7 @@ public class PurchasesInvoiceController {
     @GetMapping("/update/{id}")
     public String editPurchaseInvoices(@PathVariable("id") Long id, Model model){
         model.addAttribute("invoice",invoiceService.findById(id));
-       // model.addAttribute("vendors", clientVendorService.listAllClientVendor());
+        model.addAttribute("vendors", clientVendorService.getListOfClientVendors());
        // model.addAttribute("products", productService.listAllProducts());
     return "/invoice/purchase-invoice-update";
 

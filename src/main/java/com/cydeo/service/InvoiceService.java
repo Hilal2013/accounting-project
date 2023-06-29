@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InvoiceService {
     InvoiceDTO findById(Long id);
-    InvoiceDTO save(InvoiceDTO invoice);
+    void save(InvoiceDTO invoice);
     InvoiceDTO update(InvoiceDTO invoice);
     List<InvoiceDTO> listAllInvoice();
 
@@ -16,5 +16,7 @@ public interface InvoiceService {
     InvoiceDTO approve(Long id);
 
     InvoiceDTO createNewSalesInvoice();
+
+    InvoiceDTO createNewPurchasesInvoice();
 }
 
