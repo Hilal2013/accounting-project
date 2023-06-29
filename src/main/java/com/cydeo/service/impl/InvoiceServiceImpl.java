@@ -45,11 +45,14 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO update(InvoiceDTO invoice) {
-        Invoice updateInvoice=mapperUtil.convert(invoice,new Invoice());
-        updateInvoice.setLastUpdateDateTime(LocalDateTime.now());
-        updateInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
-        invoiceRepository.save(updateInvoice);
-        return mapperUtil.convert(updateInvoice,new InvoiceDTO());
+
+        Optional<Invoice> invoice2 = invoiceRepository.findById(invoice.getId());
+
+        Invoice updatedInvoice=mapperUtil.convert(invoice,new Invoice());
+        updatedInvoice.setClientVendor(invoice2.get().getClientVendor());
+
+        invoiceRepository.save(updatedInvoice);
+        return mapperUtil.convert(updatedInvoice,new InvoiceDTO());
     }
 
 

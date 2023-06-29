@@ -11,5 +11,5 @@ public interface InvoiceProductService {
     InvoiceProductDTO save(InvoiceProductDTO invoiceProductDTO, Long id);
     InvoiceProductDTO findById(Long id);
     InvoiceProductDTO findByInvoiceId(Long id);
-    InvoiceProductDTO delete(Long invoiceId,Long invoiceProductId);
+    InvoiceProductDTO delete(Long invoiceProductId);
 }
