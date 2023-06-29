@@ -35,8 +35,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO save(InvoiceDTO invoice) {
+        Invoice invoice1=mapperUtil.convert(invoice,new Invoice());
+        invoiceRepository.save(invoice1);
 
-        return null;
+        return mapperUtil.convert(invoice1,new InvoiceDTO());
     }
 
     @Override

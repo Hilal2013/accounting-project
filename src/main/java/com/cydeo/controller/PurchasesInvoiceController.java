@@ -29,12 +29,13 @@ public class PurchasesInvoiceController {
     @GetMapping("/create")
     public String cratePurchaseInvoices(Model model){
         model.addAttribute("newPurchaseInvoice",new InvoiceDTO());
-       // model.addAttribute("vendors",clientVendorService.listAllVendors());
+        // model.addAttribute("vendors",clientVendorService.listAllVendors());
+        //productService.listAllProduct();
         return "/invoice/purchase-invoice-create";
     }
     @PostMapping("/create")
     public String savePurchaseInvoice(@ModelAttribute("newPurchaseInvoice")InvoiceDTO invoiceDTO,Model model){
-
+        invoiceService.save(invoiceDTO);
         return "/invoice/purchase-invoice-update";
     }
 
@@ -78,7 +79,7 @@ public class PurchasesInvoiceController {
     }
     @GetMapping("/approve/{id}")
     public String getApproved(@PathVariable("id")Long id){
-        invoiceService.
+        invoiceService.approve(id);
         return "redirect:/purchaseInvoices/list";
     }
     //@GetMapping("/print/{id}")
