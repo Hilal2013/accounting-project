@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO user) {
-        User user1 = userRepository.findByIdAndAndIsDeleted(user.getId(),false);
+        User user1 = userRepository.findUserByIdIs(user.getId());
         User convertToUser = mapperUtil.convert(user,new User());
         convertToUser.setId(user1.getId());
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
-        User user = userRepository.findByIdAndAndIsDeleted(id,false);
+        User user = userRepository.findUserByIdIs(id);
 
             user.setIsDeleted(true);
             user.setUsername(user.getUsername()+"-"+ user.getId());
