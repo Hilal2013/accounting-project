@@ -38,7 +38,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public InvoiceProductDTO delete(Long invoiceId, Long invoiceProductId) {
+    public InvoiceProductDTO delete( Long invoiceProductId) {
 
         return null;
     }
