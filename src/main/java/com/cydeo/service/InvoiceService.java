@@ -13,5 +13,6 @@ public interface InvoiceService {
 
     InvoiceDTO delete(Long id);
 
+    InvoiceDTO approve(Long id);
 }
 
