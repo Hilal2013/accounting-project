@@ -61,7 +61,7 @@ public class UserController {
 
         userService.save(user);
 
-        return "redirect:/user/user-create";
+        return "redirect:/users/create";
 
     }
 
@@ -91,7 +91,7 @@ public class UserController {
 
         userService.update(user);
 
-        return "redirect:/user/user-create";
+        return "redirect:/users/create";
 
     }
 
@@ -100,7 +100,7 @@ public class UserController {
 
 
             userService.delete(id);
-        return "redirect:/user/user-list";
+        return "redirect:/users/list";
     }
 
 
