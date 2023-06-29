@@ -54,13 +54,13 @@ public class PurchasesInvoiceController {
 
         model.addAttribute("newInvoiceProduct",new InvoiceProductDTO());
         model.addAttribute("invoiceProducts",invoiceProductService.listAllInvoiceProduct());
-    return "redirect:/invoice/purchase-invoice-list";
+    return "redirect:/purchaseInvoices/list";
 
     }
     @PostMapping("/addInvoiceProduct/{id}")
     public String addInvoiceProduct(@PathVariable("id")Long id,@ModelAttribute("newInvoiceProduct")InvoiceProductDTO invoiceProduct, Model model){
 
-        return "redirect:/invoice/purchase-invoice-update";
+        return "redirect:/purchaseInvoices/update";
 
     }
 
@@ -74,9 +74,13 @@ public class PurchasesInvoiceController {
     @GetMapping("/delete/{id}")
     public String deletePurchaseInvoice(@PathVariable("id") Long id){
         invoiceService.delete(id);
-        return "redirect:/invoice/purchase-invoice-list";
+        return "redirect:/purchaseInvoices/list";
     }
-    //@GetMapping("/approve/{id}")
+    @GetMapping("/approve/{id}")
+    public String getApproved(@PathVariable("id")Long id){
+        invoiceService.
+        return "redirect:/purchaseInvoices/list";
+    }
     //@GetMapping("/print/{id}")
     ///@GetMapping("/removeInvoiceProduct/{invoiceId}/{invoiceProductId})
 
