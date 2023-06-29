@@ -42,7 +42,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     public InvoiceProductDTO delete(Long invoiceId,Long invoiceProductId) {
         InvoiceProduct invoiceProduct=invoiceProductRepository.findByInvoice_Id(invoiceId);
         invoiceProduct.setIsDeleted(true);
-
         invoiceProductRepository.save(invoiceProduct);
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;
