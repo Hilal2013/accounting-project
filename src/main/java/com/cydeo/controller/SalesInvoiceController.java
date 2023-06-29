@@ -1,6 +1,7 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -70,10 +71,18 @@ public class SalesInvoiceController {
         return "redirect:/salesInvoices/list";
     }
 
-//    @GetMapping("addInvoiceProduct/{id}")
-//    public String addInvoiceProduct(@PathVariable Long id, Model model) {
-//
-//    }
+    @PostMapping("/addInvoiceProduct/{id}")
+    public String addInvoiceProduct(@PathVariable Long id,
+                                    @ModelAttribute("newInvoiceProduct") InvoiceProductDTO invoiceProductDTO) {
+        invoiceProductService.save(invoiceProductDTO, id);
+        return "redirect:/salesInvoices/list";
+    }
+
+    @PostMapping("/removeInvoiceProduct/{invoiceId}/{invoiceProuductId}")
+    public String removeInvoiceProduct(@PathVariable Long invoiceId, @PathVariable Long invoiceProuductId) {
+        invoiceProductService.delete(invoiceId, invoiceProuductId);
+        return "redirect:/salesInvoices/list";
+    }
 
     @GetMapping("print/{id}")
     public String printSalesInvoice(@PathVariable Long id) {
