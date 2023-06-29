@@ -3,8 +3,10 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.User;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
@@ -39,11 +41,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    public void save(InvoiceDTO invoice) {
-        Invoice invoice1=mapperUtil.convert(invoice,new Invoice());
+    public InvoiceDTO save(InvoiceDTO invoice) {
+        Invoice invoice1 = mapperUtil.convert(invoice, new Invoice());
         invoice1.setId(invoice.getId());
         invoiceRepository.save(invoice1);
-
+        return mapperUtil.convert(invoice1,new InvoiceDTO());
 
 
     }
