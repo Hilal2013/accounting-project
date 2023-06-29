@@ -10,6 +10,6 @@ public interface ProductService  {
     public void save(ProductDTO product);
     public ProductDTO findById(Long id);
     public void delete(Long id);
-    public void update(ProductDTO dto);
+    public ProductDTO update(Long id, ProductDTO dto);
 
 }

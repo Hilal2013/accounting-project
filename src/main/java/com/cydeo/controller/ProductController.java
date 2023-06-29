@@ -66,13 +66,16 @@ public class ProductController {
 
     }
 
-    @PostMapping("/update/")
-    public String updateProduct(@Valid @ModelAttribute("product") ProductDTO product, Model model, BindingResult bindingResult){
+    @PostMapping("/update/{productId}")
+    public String updateProduct(@PathVariable("productId") Long productId,
+                                @Valid @ModelAttribute("product") ProductDTO product,
+                                Model model, BindingResult bindingResult)
+    {
 
         if(bindingResult.hasErrors()){
             return "/product/product-list";
         }
-        productService.update(product);
+        productService.update(productId,product);
 
         return "redirect:/product/list";
     }

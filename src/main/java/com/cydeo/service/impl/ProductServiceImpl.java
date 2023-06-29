@@ -44,15 +44,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(ProductDTO dto){
-
-        Optional<Product> product = productRepository.findById(dto.getId());
-        Product convertedProduct = productMapper.convertToEntity(dto);
-        convertedProduct.setId(product.get().getId());
-        productRepository.save(convertedProduct);
-
-    }
-    @Override
     public ProductDTO findById(Long id) {
 
         Optional<Product> product = productRepository.findById(id);
@@ -75,6 +66,17 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    @Override
+    public ProductDTO update(Long id, ProductDTO dto) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        Product convertedProduct = mapperUtil.convert(dto, new Product());
+        convertedProduct.setId(product.getId());
+        productRepository.save(convertedProduct);
+        return mapperUtil.convert(convertedProduct,new ProductDTO());
+    }
 
 
 }

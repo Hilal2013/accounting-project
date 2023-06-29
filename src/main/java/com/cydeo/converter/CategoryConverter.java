@@ -6,7 +6,7 @@ import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import org.springframework.core.convert.converter.Converter;
 
-public class CategoryConverter implements Converter<Long, CategoryDTO> {
+public class CategoryConverter implements Converter<String, CategoryDTO> {
 
     CategoryService categoryService;
 
@@ -17,12 +17,12 @@ public class CategoryConverter implements Converter<Long, CategoryDTO> {
 
 
     @Override
-    public CategoryDTO convert(Long source) {
+    public CategoryDTO convert(String source) {
 
         if (source == null || source.equals("")) {
             return null;
         }
 
-        return categoryService.findById(Long.parseLong(String.valueOf(source)));
+        return categoryService.findById(Long.parseLong(source));
     }
 }
