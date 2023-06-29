@@ -51,7 +51,7 @@ public class PurchasesInvoiceController {
     @PostMapping("/update")
     public String updatePurchaseInvoices(@ModelAttribute("invoice")InvoiceDTO invoice, Model model){
         invoiceService.update(invoice);
-        return "/invoice/purchase-invoice-list";
+        return "redirect:/purchaseInvoices/list";
 
     }
 

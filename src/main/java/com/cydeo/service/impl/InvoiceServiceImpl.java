@@ -10,6 +10,8 @@ import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,8 +45,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO update(InvoiceDTO invoice) {
-
-        return null;
+        Invoice updateInvoice=mapperUtil.convert(invoice,new Invoice());
+        updateInvoice.setLastUpdateDateTime(LocalDateTime.now());
+        updateInvoice.setInvoiceStatus(invoice.getInvoiceStatus());
+        invoiceRepository.save(updateInvoice);
+        return mapperUtil.convert(updateInvoice,new InvoiceDTO());
     }
 
 
