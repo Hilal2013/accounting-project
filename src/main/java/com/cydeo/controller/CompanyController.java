@@ -23,13 +23,13 @@ public class CompanyController {
     @GetMapping("/list")
     public String getListOfCompanies(Model model) {
         model.addAttribute("companies", companyService.getListOfCompanies());
-        return "company-list";
+        return "company/company-list";
     }
 
     @GetMapping("/create")
     public String createCompany(Model model){
         model.addAttribute("newCompany",new CompanyDTO());
-           return"company-create";
+           return"company/company-create";
     }
 
     @PostMapping("/create")
@@ -45,28 +45,28 @@ public class CompanyController {
     @GetMapping("/update/{id}")
     public String editCompanyForm(@PathVariable("id") Long id,Model model) {
         model.addAttribute("company",companyService.findById(id));
-        return "company-update";
+        return "company/company-update";
     }
 
     @PostMapping("/update{id}")
     public String updateCompany(@PathVariable("id") Long id,@Valid @ModelAttribute("company") CompanyDTO companyDTO,BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
-            return "company-update";
+            return "company/company-update";
         }
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }
 // Activate and Deactivate functions
-    @PostMapping("/activate/{id}")
+    @GetMapping("/activate/{id}")
     public String activateCompany(@PathVariable Long id) {
         companyService.changeCompanyStatus(id, CompanyStatus.ACTIVE);
         return "redirect:/companies/list";
     }
 
-    @PostMapping("/deactivate/{companyId}")
-    public String deactivateCompany(@PathVariable Long companyId) {
-        companyService.changeCompanyStatus(companyId, CompanyStatus.PASSIVE);
+    @GetMapping("/deactivate/{id}")
+    public String deactivateCompany(@PathVariable Long id) {
+        companyService.changeCompanyStatus(id, CompanyStatus.PASSIVE);
         return "redirect:/companies/list";
     }
 

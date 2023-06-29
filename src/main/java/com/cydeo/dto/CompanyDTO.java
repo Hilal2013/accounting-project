@@ -20,6 +20,6 @@ public class CompanyDTO {
     private String title;
     private String phone;
     private String website;
-    private AddressDTO addressDTO;
+    private AddressDTO address;
     private CompanyStatus companyStatus;
 }
