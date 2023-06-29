@@ -3,6 +3,7 @@ package com.cydeo.controller;
 
 
 import com.cydeo.dto.UserDTO;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.RoleService;
 import com.cydeo.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -19,9 +20,12 @@ public class UserController {
     private final RoleService roleService;
     private final UserService userService;
 
-    public UserController(RoleService roleService, UserService userService) {
+    private final CompanyService companyService;
+
+    public UserController(RoleService roleService, UserService userService, CompanyService companyService) {
         this.roleService = roleService;
         this.userService = userService;
+        this.companyService = companyService;
     }
 
 
@@ -44,6 +48,7 @@ public class UserController {
 
         model.addAttribute("newUser",new UserDTO());
         model.addAttribute("userRoles",roleService.listAllRoles());
+        model.addAttribute("companies", companyService.getListOfCompanies());
 
 
         return "/user/user-create";
@@ -61,7 +66,7 @@ public class UserController {
 
         userService.save(user);
 
-        return "redirect:/users/create";
+        return "redirect:/users/list";
 
     }
 
@@ -72,18 +77,21 @@ public class UserController {
 
         model.addAttribute("user", userService.findById(id));
         model.addAttribute("userRoles", roleService.listAllRoles());
+        model.addAttribute("companies", companyService.getListOfCompanies());
+
 
         return "/user/user-update";
 
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update/{id}")
     public String updateUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
 
             model.addAttribute("userRoles", roleService.listAllRoles());
             model.addAttribute("users", userService.listAllUsers());
+            model.addAttribute("companies", companyService.getListOfCompanies());
 
             return "/user/user-update";
 
