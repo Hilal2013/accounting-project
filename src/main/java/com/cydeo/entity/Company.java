@@ -18,7 +18,7 @@ public class Company extends BaseEntity{
     private String title;
     private String phone;
     private String website;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Address address;
     @Enumerated(EnumType.STRING)
     private CompanyStatus companyStatus;
