@@ -29,50 +29,55 @@ public class PurchasesInvoiceController {
     @GetMapping("/create")
     public String cratePurchaseInvoices(Model model){
         model.addAttribute("newPurchaseInvoice",new InvoiceDTO());
-       // model.addAttribute("vendors",clientVendorService.listAllVendors());
+        // model.addAttribute("vendors",clientVendorService.listAllVendors());
+        //model.addAttribute("products", productService.listAllProducts());
         return "/invoice/purchase-invoice-create";
     }
     @PostMapping("/create")
     public String savePurchaseInvoice(@ModelAttribute("newPurchaseInvoice")InvoiceDTO invoiceDTO,Model model){
-
+        invoiceService.save(invoiceDTO);
         return "/invoice/purchase-invoice-update";
     }
+
 
     @GetMapping("/update/{id}")
     public String editPurchaseInvoices(@PathVariable("id") Long id, Model model){
         model.addAttribute("invoice",invoiceService.findById(id));
-        //clientVendorService.listAllVendors();
-
-        //productService.listAllProduct();
-
-        return "/invoice/purchase-invoice-update";
+       // model.addAttribute("vendors", clientVendorService.listAllClientVendor());
+       // model.addAttribute("products", productService.listAllProducts());
+    return "/invoice/purchase-invoice-update";
 
    }
-    @GetMapping("/addInvoiceProduct/{id}")
+    @PostMapping("/update")
+    public String updatePurchaseInvoices(@ModelAttribute("invoice")InvoiceDTO invoice, Model model){
+        invoiceService.update(invoice);
+        return "/invoice/purchase-invoice-list";
+
+    }
+
+   @GetMapping("/addInvoiceProduct/{id}")
     public String addInvoiceProduct(@PathVariable("id")Long id, Model model){
         model.addAttribute("newInvoiceProduct",new InvoiceProductDTO());
-       // model.addAttribute("invoiceProducts",invoiceProductService.listAllInvoiceProduct());
-    return "redirect:/invoice/purchase-invoice-update";
+    return "redirect:/purchaseInvoices/list";
 
     }
-    @PostMapping("/addInvoiceProduct/{id}")
-    public String addInvoiceProduct(@PathVariable("id")Long id,@ModelAttribute("newInvoiceProduct")InvoiceProductDTO invoiceProduct, Model model){
-
-        return "redirect:/invoice/purchase-invoice-update";
-
-    }
-
-
-    @PostMapping("/update/{id}")
-    public String updatePurchaseInvoices(@PathVariable("id") Long id,@ModelAttribute("invoice")InvoiceDTO invoice, Model model){
-       invoiceService.update(invoice);
-        return "/invoice/purchase-invoice-update";
+    @PostMapping("/addInvoiceProduct")
+    public String addInvoiceProduct(@ModelAttribute("newInvoiceProduct")InvoiceProductDTO invoiceProduct, Model model){
+        return "redirect:/purchaseInvoices/update";
 
     }
-    //@GetMapping("/delete/{id}")
-    //@GetMapping("/approve/{id}")
+    @GetMapping("/delete/{id}")
+    public String deletePurchaseInvoice(@PathVariable("id") Long id){
+        invoiceService.delete(id);
+        return "redirect:/purchaseInvoices/list";
+    }
+    @GetMapping("/approve/{id}")
+    public String getApproved(@PathVariable("id")Long id){
+        invoiceService.approve(id);
+        return "redirect:/purchaseInvoices/list";
+    }
     //@GetMapping("/print/{id}")
-    //@GetMapping("/removeInvoiceProduct/{invoiceId})
+    ///@GetMapping("/removeInvoiceProduct/{invoiceId}/{invoiceProductId})
 
 
 }
