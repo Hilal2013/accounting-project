@@ -4,6 +4,7 @@ import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.Invoice;
 import com.cydeo.entity.User;
+import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.InvoiceService;
@@ -65,9 +66,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceDTO;
     }
 
-
-
-
+    @Override
+    public InvoiceDTO approve(Long id) {
+        Invoice invoice = invoiceRepository.findById(id).orElseThrow();
+        invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoiceRepository.save(invoice);
+        return mapperUtil.convert(invoice, new InvoiceDTO());
+    }
 
 
 }

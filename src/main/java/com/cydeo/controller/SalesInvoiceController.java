@@ -50,6 +50,12 @@ public class SalesInvoiceController {
         return "redirect:/salesInvoices/list";
     }
 
+    @GetMapping("/approve/{id}")
+    public String approveSalesInvoiceById(@PathVariable Long id) {
+        invoiceService.approve(id);
+        return "redirect:/salesInvoices/list";
+    }
+
 
 
 
