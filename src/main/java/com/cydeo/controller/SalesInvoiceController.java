@@ -2,6 +2,7 @@ package com.cydeo.controller;
 
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
+import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,13 @@ public class SalesInvoiceController {
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
 //    private final ProductService productService;
-//    private final ClientVendorService clientVendorService;
+    private final ClientVendorService clientVendorService;
 
-    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService) {
+    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
 //        this.productService = invoiceProductService;
-//        this.clientVendorService = clientVendorService;
+        this.clientVendorService = clientVendorService;
     }
 
     @GetMapping("/list")
@@ -32,8 +33,8 @@ public class SalesInvoiceController {
 
     @GetMapping("/create")
     public String createSalesInvoice(Model model) {
-        model.addAttribute("newSalesInvoice", new InvoiceDTO());
-//        model.addAttribute("clients", clientVendorService.listAllClientVendor());
+        model.addAttribute("newSalesInvoice", invoiceService.createNewSalesInvoice());
+        model.addAttribute("clients", clientVendorService.getListOfClientVendors());
         return "invoice/sales-invoice-create";
     }
 
