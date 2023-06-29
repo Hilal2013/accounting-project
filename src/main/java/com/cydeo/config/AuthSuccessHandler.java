@@ -19,5 +19,6 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
         if (authorities.contains("Root User")) response.sendRedirect("/companies/list");
         if (authorities.contains("Admin")) response.sendRedirect("/users/list");
         if (authorities.contains("Manager") || authorities.contains("Employee")) response.sendRedirect("/dashboard");
+
     }
 }

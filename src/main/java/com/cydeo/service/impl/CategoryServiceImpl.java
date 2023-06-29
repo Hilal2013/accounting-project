@@ -8,32 +8,38 @@ import com.cydeo.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
-    private final MapperUtil mapperUtil;
     private final CategoryRepository categoryRepository;
+    private final MapperUtil mapperUtil;
 
-    public CategoryServiceImpl(MapperUtil mapperUtil, CategoryRepository categoryRepository) {
-        this.mapperUtil = mapperUtil;
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil) {
         this.categoryRepository = categoryRepository;
+        this.mapperUtil = mapperUtil;
     }
 
     @Override
-    public CategoryDTO findById(Long id) {
-        Optional<Category> byId=categoryRepository.findById(id);
-        Category category=byId.orElseThrow(()->new NoSuchElementException("Category not found"));
+    public List<CategoryDTO> listAllCategories() {
+
+        List<Category> categoriesList = categoryRepository.findAll();
+        return categoriesList.stream().map(
+
+                category ->
+                        mapperUtil.convert(category, new CategoryDTO())).collect(Collectors.toList()
+        );
+    }
+
+    @Override
+    public CategoryDTO findById(long parseLong) {
+
+        Optional<Category> category = categoryRepository.findById(parseLong);
+
         return mapperUtil.convert(category, new CategoryDTO());
     }
 
-    @Override
-    public List<CategoryDTO> getCategoryList() {
-        List<Category> categoryList=categoryRepository.findAll();
-        return categoryList.stream().map(newCategoryList->mapperUtil.convert(newCategoryList, new CategoryDTO()))
-                .collect(Collectors.toList());
-    }
+
 }

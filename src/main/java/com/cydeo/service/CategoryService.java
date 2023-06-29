@@ -1,10 +1,13 @@
 package com.cydeo.service;
 
 import com.cydeo.dto.CategoryDTO;
+import com.cydeo.dto.ProductDTO;
+
 import java.util.List;
 
 public interface CategoryService {
-    CategoryDTO findById(Long id);
-    List<CategoryDTO> getCategoryList();
 
+    public List<CategoryDTO> listAllCategories();
+
+    CategoryDTO findById(long parseLong);
 }
