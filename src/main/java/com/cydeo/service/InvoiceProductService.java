@@ -10,4 +10,5 @@ public interface InvoiceProductService {
     List<InvoiceProductDTO> listAllInvoiceProduct(Long id);
     InvoiceProductDTO findById(Long id);
     InvoiceProductDTO findByInvoiceId(Long id);
+    InvoiceProductDTO delete(Long invoiceId,Long invoiceProductId);
 }

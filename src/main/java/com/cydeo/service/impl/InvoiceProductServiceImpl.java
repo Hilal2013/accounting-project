@@ -37,5 +37,11 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         return mapperUtil.convert(invoiceProductRepository.findByInvoice_Id(id), new InvoiceProductDTO());
     }
 
+    @Override
+    public InvoiceProductDTO delete(Long invoiceId, Long invoiceProductId) {
+
+        return null;
+    }
+
 
 }

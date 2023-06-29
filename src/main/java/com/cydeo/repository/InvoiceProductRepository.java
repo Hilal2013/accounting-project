@@ -11,4 +11,6 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct,L
     InvoiceProduct findByInvoice_Id(Long id);
     List<InvoiceProduct> findAllByInvoiceId(Long id);
 
+    InvoiceProduct findAllByInvoiceIdAndIsDeleted(Long id,Boolean deleted);
+
 }

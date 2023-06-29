@@ -48,7 +48,7 @@ public class SalesInvoiceController {
 //        model.addAttribute("clients", clientVendorService.listAllClientVendor());
         model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
 //        model.addAttribute("products", productService.listAllProducts());
-        model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct());
+    //    model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct());
         return "invoice/sales-invoice-update";
     }
 
