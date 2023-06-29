@@ -4,11 +4,7 @@ import com.cydeo.dto.ProductDTO;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/products")
@@ -28,19 +24,29 @@ public class ProductController {
         return "/product/product-create";
     }
 
-    @PostMapping
-    public String createProduct(@ModelAttribute("product") ProductDTO product, Model model){
+    @PostMapping("/create")
+    public String insertProduct(@ModelAttribute("product") ProductDTO product, Model model){
 
-        model.addAttribute("newProduct", new ProductDTO());
         productService.save(product);
 
-        return "redirect: /product/product-create";
+        return "redirect:/product/product-create";
     }
 
     @GetMapping("/list")
     public String listAllProducts(Model model){
+
         model.addAttribute("products", productService.listAllProducts());
+
         return "/product/product-list";
+    }
+
+    @GetMapping("/update/{productId}")
+    public String editUser(@PathVariable("productId") Long id, Model model) {
+
+        model.addAttribute("product", productService.findById(id));
+
+        return "/product/product-update";
+
     }
 
 
