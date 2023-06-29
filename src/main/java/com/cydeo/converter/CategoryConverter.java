@@ -5,7 +5,9 @@ import com.cydeo.dto.CompanyDTO;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CategoryConverter implements Converter<String, CategoryDTO> {
 
     CategoryService categoryService;

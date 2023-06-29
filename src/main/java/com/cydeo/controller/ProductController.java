@@ -77,7 +77,7 @@ public class ProductController {
         }
         productService.update(productId,product);
 
-        return "redirect:/product/list";
+        return "redirect:/products/list";
     }
 
 
