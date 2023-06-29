@@ -1,6 +1,7 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceProductDTO;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.InvoiceProductService;
@@ -38,9 +39,12 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public InvoiceProductDTO delete( Long invoiceProductId) {
-
-        return null;
+    public InvoiceProductDTO delete(Long invoiceId,Long invoiceProductId) {
+        InvoiceProduct invoiceProduct=invoiceProductRepository.findByInvoice_Id(invoiceId);
+        invoiceProduct.setIsDeleted(true);
+        invoiceProductRepository.save(invoiceProduct);
+        InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
+        return invoiceProductDTO;
     }
 
 
