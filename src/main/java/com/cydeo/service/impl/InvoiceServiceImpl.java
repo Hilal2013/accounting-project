@@ -102,9 +102,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO createNewPurchasesInvoice() {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.SALES).size() + 1));
+        invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-
+        invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
+        invoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         return invoiceDTO;
 
     }
