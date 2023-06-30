@@ -37,14 +37,18 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String insertProduct(@ModelAttribute("product") ProductDTO product, Model model, BindingResult bindingResult){
+    public String insertProduct(@Valid @ModelAttribute("product") ProductDTO product, Model model, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
+
+            model.addAttribute("categories", categoryService.listAllCategories());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+
             return "/product/product-create";
         }
         productService.save(product);
 
-        return "redirect:/products/create";
+        return "redirect:/products/list";
     }
 
     @GetMapping("/list")
@@ -69,10 +73,12 @@ public class ProductController {
     @PostMapping("/update/{productId}")
     public String updateProduct(@PathVariable("productId") Long productId,
                                 @Valid @ModelAttribute("product") ProductDTO product,
-                                Model model, BindingResult bindingResult)
-    {
+                                Model model, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
+            model.addAttribute("categories", categoryService.listAllCategories());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+            model.addAttribute("product", productService.findById(productId));
             return "/product/product-list";
         }
         productService.update(productId,product);

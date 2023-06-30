@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Where(clause = "is_deleted = false")
 public class Product extends BaseEntity {
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String name;
     @Column
     private int quantityInStock;
