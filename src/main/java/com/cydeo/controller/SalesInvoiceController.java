@@ -5,6 +5,7 @@ import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,13 @@ public class SalesInvoiceController {
 
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
-//    private final ProductService productService;
+    private final ProductService productService;
     private final ClientVendorService clientVendorService;
 
-    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ClientVendorService clientVendorService) {
+    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
-//        this.productService = invoiceProductService;
+        this.productService = productService;
         this.clientVendorService = clientVendorService;
     }
 
@@ -38,8 +39,8 @@ public class SalesInvoiceController {
         return "invoice/sales-invoice-create";
     }
 
-    @PostMapping("create")
-    public String saveSalesInvoice(@ModelAttribute InvoiceDTO invoice) {
+    @PostMapping("/create")
+    public String saveSalesInvoice(@ModelAttribute("newSalesInvoice") InvoiceDTO invoice) {
         invoiceService.save(invoice);
         return "invoice/sales-invoice-update";
     }
@@ -47,10 +48,10 @@ public class SalesInvoiceController {
     @GetMapping("/update/{id}")
     public String editSalesInvoice(@PathVariable Long id, Model model) {
         model.addAttribute("invoice", invoiceService.findById(id));
-//        model.addAttribute("clients", clientVendorService.listAllClientVendor());
+        model.addAttribute("clients", clientVendorService.getListOfClientVendors());
         model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
-//        model.addAttribute("products", productService.listAllProducts());
-    //    model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct());
+        model.addAttribute("products", productService.listAllProducts());
+        model.addAttribute("invoiceProducts", invoiceProductService.findByInvoiceId(id));
         return "invoice/sales-invoice-update";
     }
 
