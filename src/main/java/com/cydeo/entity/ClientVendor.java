@@ -22,7 +22,7 @@ public class ClientVendor extends BaseEntity {
     private ClientVendorType clientVendorType;
     @OneToOne(cascade = {CascadeType.ALL})
     private Address address;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
 }

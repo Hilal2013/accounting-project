@@ -56,7 +56,7 @@ public class ClientVendorController {
         return "/clientVendor/clientVendor-update";
     }
 
-    @PostMapping("/update{id}")
+    @PostMapping("update/{id}")
     public String updateClientVendor(@PathVariable("id") Long id, @Valid @ModelAttribute("clientVendor") ClientVendorDTO clientVendorDTO, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
