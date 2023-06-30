@@ -49,7 +49,7 @@ public class SalesInvoiceController {
     public String editSalesInvoice(@PathVariable Long id, Model model) {
         model.addAttribute("invoice", invoiceService.findById(id));
         model.addAttribute("clients", clientVendorService.getListOfClientVendors());
-        model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
+        model.addAttribute("newInvoiceProduct", invoiceProductService.listAllInvoiceProduct(id));
         model.addAttribute("products", productService.listAllProducts());
         model.addAttribute("invoiceProducts", invoiceProductService.findByInvoiceId(id));
         return "invoice/sales-invoice-update";

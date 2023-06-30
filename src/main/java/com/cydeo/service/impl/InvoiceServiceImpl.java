@@ -38,6 +38,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO save(InvoiceDTO invoice,InvoiceType type) {
+        invoice.setCompany(companyService.getCompanyDTOByLoggedInUser());
         Invoice invoice1 = mapperUtil.convert(invoice, new Invoice());
         invoice1.setInvoiceType(type);
         invoice1.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
@@ -93,7 +94,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("S-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.SALES).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-        invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
+
         return invoiceDTO;
     }
 
@@ -102,7 +103,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-        //invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
+
         return invoiceDTO;
 
     }

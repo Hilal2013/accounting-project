@@ -24,7 +24,7 @@ public class InvoiceProductDTOConverter implements Converter<String, InvoiceProd
             return null;
         }
 
-        return invoiceProductService.findById(Long.valueOf(source));
+        return invoiceProductService.findById(Long.parseLong(source));
     }
 
 }

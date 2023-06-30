@@ -22,7 +22,7 @@ public class InvoiceDTOConverter implements Converter<String, InvoiceDTO> {
             return null;
         }
 
-        return invoiceService.findById(Long.valueOf(source));
+        return invoiceService.findById(Long.parseLong(source));
 
     }
 
