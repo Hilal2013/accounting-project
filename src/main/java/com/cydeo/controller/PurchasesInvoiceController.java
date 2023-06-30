@@ -39,8 +39,6 @@ public class PurchasesInvoiceController {
     public String cratePurchaseInvoices(Model model) {
         model.addAttribute("newPurchaseInvoice", invoiceService.createNewPurchasesInvoice());
         model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
-        // model.addAttribute("vendors",clientVendorService.listClientVendorType(ClientVendorType.VENDOR));
-
         return "/invoice/purchase-invoice-create";
     }
 
@@ -50,10 +48,6 @@ public class PurchasesInvoiceController {
         String id = invoiceService.findInvoiceId();
         return "redirect:/purchaseInvoices/update/"+id;
     }
-
-
-
-
     @GetMapping("/update/{id}")
     public String editPurchaseInvoices(@PathVariable("id") Long id, Model model) {
         model.addAttribute("invoice", invoiceService.findById(id));
@@ -62,6 +56,11 @@ public class PurchasesInvoiceController {
         model.addAttribute("products", productService.listAllProducts());
         model.addAttribute("newInvoiceProduct", invoiceProductService.findByInvoiceId(id));
         return "/invoice/purchase-invoice-update";
+    }
+    @PostMapping("/update/{id}")
+    public String updateInvoice(@PathVariable("id")Long id,@ModelAttribute("newPurchaseInvoice")InvoiceDTO invoice,Model model){
+        invoiceService.createNewPurchasesInvoice();
+        return "redirect:/purchaseInvoices/list";
     }
 
 

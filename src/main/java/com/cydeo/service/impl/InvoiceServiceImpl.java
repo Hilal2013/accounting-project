@@ -113,7 +113,6 @@ public class InvoiceServiceImpl implements InvoiceService {
     public String findInvoiceId() {
 
     return String.valueOf(invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size());
-
     }
 
 
