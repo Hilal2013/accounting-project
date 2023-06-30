@@ -34,9 +34,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public InvoiceProductDTO save(InvoiceProductDTO invoiceProductDTO, Long id) {
+        InvoiceDTO invoice = invoiceService.findById(id);
+        invoiceProductDTO.setInvoice(invoice);
         InvoiceProduct invoiceProduct = invoiceProductRepository
                 .save(mapperUtil.convert(invoiceProductDTO, new InvoiceProduct()));
-        InvoiceDTO invoice = invoiceService.findById(id);
         return mapperUtil.convert(invoiceProduct, new InvoiceProductDTO());
     }
 

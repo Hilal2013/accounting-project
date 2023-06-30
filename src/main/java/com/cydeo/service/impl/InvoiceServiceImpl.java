@@ -112,7 +112,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public String findInvoiceId() {
 
-    return String.valueOf(invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size());
+    return String.valueOf(invoiceRepository.findAll().size());
     }
 
 

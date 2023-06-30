@@ -9,6 +9,7 @@ import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
+import com.sun.xml.bind.v2.TODO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -77,7 +78,7 @@ public class PurchasesInvoiceController {
     public String addInvoiceProduct1(@PathVariable("id") Long id, @ModelAttribute InvoiceProductDTO invoiceProductDTO, Model model) {
         invoiceProductService.save(invoiceProductDTO, id);
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));
-        return "redirect:/purchaseInvoices/update";
+        return "redirect:/purchaseInvoices/update/"+ id;
 
     }
 
