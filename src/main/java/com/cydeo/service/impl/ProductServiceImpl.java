@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> listAllProducts() {
 
-        List<Product> productsList = productRepository.findAll();
+        List<Product> productsList = productRepository.findAllByIsDeletedOrderByCategoryAscNameAsc(false);
 
         return productsList.stream().map(
 
