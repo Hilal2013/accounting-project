@@ -2,12 +2,14 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
+import com.cydeo.entity.ClientVendor;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.ClientVendorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,12 +37,27 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDTO createClientVendor(ClientVendorDTO clientVendorDTO) {
-        return null;
+       ClientVendor clientVendor=  clientVendorRepository.save(mapperUtil.convert(clientVendorDTO,new ClientVendor()));
+         return mapperUtil.convert(clientVendor,new ClientVendorDTO());
     }
 
     @Override
     public ClientVendorDTO updateClientVendor(Long id, ClientVendorDTO clientVendorDTO) {
-        return null;
+        ClientVendor clientVendor=clientVendorRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("ClientVendor couldn't find"));
+        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDTO,new ClientVendor());
+        convertedClientVendor.setId(clientVendor.getId());
+        clientVendorRepository.save(convertedClientVendor);
+        return mapperUtil.convert(convertedClientVendor,new ClientVendorDTO());
+    }
+//soft delete
+    @Override
+    public void delete(Long id) {
+        ClientVendor clientVendor = clientVendorRepository.findByIdAndIsDeleted(id, false);
+       clientVendor.setIsDeleted(true);
+clientVendorRepository.save(clientVendor);
+
+
     }
 
 
