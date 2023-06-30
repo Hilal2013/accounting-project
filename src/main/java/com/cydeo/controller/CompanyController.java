@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/companies")
@@ -29,13 +30,15 @@ public class CompanyController {
     @GetMapping("/create")
     public String createCompany(Model model){
         model.addAttribute("newCompany",new CompanyDTO());
+        //TODO Countries will be provided by a third party API by consuming it.
+        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
            return"company/company-create";
     }
 
     @PostMapping("/create")
     public String saveCompany(@Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/companies/create";
+            return "/company/company-create";
         }
 
         companyService.createCompany(companyDTO);
@@ -45,15 +48,13 @@ public class CompanyController {
     @GetMapping("/update/{id}")
     public String editCompanyForm(@PathVariable("id") Long id,Model model) {
         model.addAttribute("company",companyService.findById(id));
+        //TODO Countries will be provided by a third party API by consuming it.
+        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
         return "company/company-update";
     }
 
-    @PostMapping("/update{id}")
-    public String updateCompany(@PathVariable("id") Long id,@Valid @ModelAttribute("company") CompanyDTO companyDTO,BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            return "company/company-update";
-        }
+    @PostMapping("/update/{id}")
+    public String updateCompany(@PathVariable("id") Long id, @ModelAttribute("company") CompanyDTO companyDTO, Model model) {
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }
