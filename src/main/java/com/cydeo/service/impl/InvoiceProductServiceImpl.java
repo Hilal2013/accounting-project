@@ -10,6 +10,7 @@ import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,10 +53,10 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     }
 
     @Override
-    public InvoiceProductDTO delete(Long invoiceId,Long invoiceProductId) {
-        InvoiceProduct invoiceProduct=invoiceProductRepository.findByInvoice_Id(invoiceId);
-        invoiceProduct.setIsDeleted(true);
-        invoiceProductRepository.save(invoiceProduct);
+    public InvoiceProductDTO delete(Long invoiceProductId) {
+        Optional<InvoiceProduct> invoiceProduct=invoiceProductRepository.findById(invoiceProductId);
+        invoiceProduct.orElseThrow().setIsDeleted(true);
+        invoiceProductRepository.save(invoiceProduct.orElseThrow());
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;
     }
