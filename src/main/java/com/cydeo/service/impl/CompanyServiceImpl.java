@@ -55,6 +55,7 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.save(mapperUtil.convert(companyDTO, new Company()));
         //New created company's company status will be "Passive" as default
         company.setCompanyStatus(CompanyStatus.PASSIVE); // Set
+        companyRepository.save(company);
         return mapperUtil.convert(company, new CompanyDTO());
     }
 
@@ -66,6 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
         //convert coming CompanyDTO to Company
         Company convertedCompany = mapperUtil.convert(companyDTO, new Company());
         convertedCompany.setId(company.getId());
+        convertedCompany.setCompanyStatus(company.getCompanyStatus());
         companyRepository.save(convertedCompany);
         return mapperUtil.convert(convertedCompany,new CompanyDTO());
 
