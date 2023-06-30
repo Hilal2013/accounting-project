@@ -42,6 +42,8 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDTO createClientVendor(ClientVendorDTO clientVendorDTO) {
+        CompanyDTO companyDTO =companyService.getCompanyDTOByLoggedInUser();
+        clientVendorDTO.setCompanyDTO(companyDTO);
         ClientVendor clientVendor = clientVendorRepository.save(mapperUtil.convert(clientVendorDTO, new ClientVendor()));
         return mapperUtil.convert(clientVendor, new ClientVendorDTO());
     }
@@ -52,13 +54,10 @@ public class ClientVendorServiceImpl implements ClientVendorService {
                 .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find"));
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
-        CompanyDTO companyDTO =companyService.getCompanyDTOByLoggedInUser();
-        Company company=mapperUtil.convert(companyDTO,new Company());
-       convertedClientVendor.setCompany(company);
+        convertedClientVendor.setCompany(clientVendor.getCompany());
         clientVendorRepository.save(convertedClientVendor);
         return mapperUtil.convert(convertedClientVendor, new ClientVendorDTO());
     }
-
     //soft delete
     @Override
     public void delete(Long id) {
