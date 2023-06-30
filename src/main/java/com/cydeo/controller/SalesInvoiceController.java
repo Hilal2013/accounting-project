@@ -60,6 +60,7 @@ public class SalesInvoiceController {
 
     @PostMapping("/update/{id}")
     public String updateSalesInvoice(@PathVariable("id") Long id,@ModelAttribute("newPurchaseInvoice")InvoiceDTO invoice) {
+        invoiceService.save(invoice,InvoiceType.SALES);
         invoiceService.createNewSalesInvoice();
         return "redirect:/salesInvoices/list";
     }
