@@ -4,6 +4,7 @@ package com.cydeo.entity;
 import com.cydeo.enums.CompanyStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
 
 import javax.persistence.*;
