@@ -1,22 +1,16 @@
 package com.cydeo.service.impl;
 
-import com.cydeo.dto.ClientVendorDTO;
-import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
-import com.cydeo.dto.InvoiceProductDTO;
-import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Invoice;
-import com.cydeo.entity.InvoiceProduct;
-import com.cydeo.entity.User;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceRepository;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,11 +18,13 @@ import java.util.stream.Collectors;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
+    private final CompanyService companyService;
 
     private final MapperUtil mapperUtil;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, MapperUtil mapperUtil) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, MapperUtil mapperUtil) {
         this.invoiceRepository = invoiceRepository;
+        this.companyService = companyService;
         this.mapperUtil = mapperUtil;
     }
 
@@ -97,6 +93,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("S-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.SALES).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
+        invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
         return invoiceDTO;
     }
 
@@ -105,6 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
+        invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
         return invoiceDTO;
 
     }
