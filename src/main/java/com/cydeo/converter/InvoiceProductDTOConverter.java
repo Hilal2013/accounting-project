@@ -2,11 +2,14 @@ package com.cydeo.converter;
 
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.service.InvoiceProductService;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InvoiceProductDTOConverter implements Converter<Long, InvoiceProductDTO> {
+//@ConfigurationPropertiesBinding
+public class InvoiceProductDTOConverter implements Converter<String, InvoiceProductDTO> {
 
     InvoiceProductService invoiceProductService;
 
@@ -15,12 +18,13 @@ public class InvoiceProductDTOConverter implements Converter<Long, InvoiceProduc
     }
 
     @Override
-    public InvoiceProductDTO convert(Long source) {
+    public InvoiceProductDTO convert(String source) {
 
-        if (source == null) {
+        if (source == null || source.equals("")) {
             return null;
         }
 
-        return invoiceProductService.findById(source);
+        return invoiceProductService.findById(Long.valueOf(source));
     }
+
 }

@@ -102,15 +102,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-        invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
+        //invoiceDTO.setCompany(companyService.getCompanyDTOByLoggedInUser());
         return invoiceDTO;
 
     }
 
     @Override
     public String findInvoiceId() {
-
-    return String.valueOf(invoiceRepository.findAll().size());
+        return String.valueOf(invoiceRepository.findAll().size());
     }
 
 
