@@ -26,39 +26,41 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public ClientVendorDTO findById(Long id) {
         return mapperUtil.convert(clientVendorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find.")), new ClientVendorDTO());    }
+                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find.")), new ClientVendorDTO());
+    }
 
     @Override
     public List<ClientVendorDTO> getListOfClientVendors() {
         return clientVendorRepository.findAll()
                 .stream()
                 .map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDTO()))
-                .collect(Collectors.toList());    }
+                .collect(Collectors.toList());
+    }
 
     @Override
     public ClientVendorDTO createClientVendor(ClientVendorDTO clientVendorDTO) {
-       ClientVendor clientVendor=  clientVendorRepository.save(mapperUtil.convert(clientVendorDTO,new ClientVendor()));
-         return mapperUtil.convert(clientVendor,new ClientVendorDTO());
+        ClientVendor clientVendor = clientVendorRepository.save(mapperUtil.convert(clientVendorDTO, new ClientVendor()));
+        return mapperUtil.convert(clientVendor, new ClientVendorDTO());
     }
 
     @Override
     public ClientVendorDTO updateClientVendor(Long id, ClientVendorDTO clientVendorDTO) {
-        ClientVendor clientVendor=clientVendorRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("ClientVendor couldn't find"));
-        ClientVendor convertedClientVendor=mapperUtil.convert(clientVendorDTO,new ClientVendor());
+        ClientVendor clientVendor = clientVendorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find"));
+        ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
         clientVendorRepository.save(convertedClientVendor);
-        return mapperUtil.convert(convertedClientVendor,new ClientVendorDTO());
+        return mapperUtil.convert(convertedClientVendor, new ClientVendorDTO());
     }
-//soft delete
+
+    //soft delete
     @Override
     public void delete(Long id) {
-        ClientVendor clientVendor = clientVendorRepository.findByIdAndIsDeleted(id, false);
-       clientVendor.setIsDeleted(true);
-clientVendorRepository.save(clientVendor);
 
+        ClientVendor clientVendor = clientVendorRepository.findByIdAndIsDeleted(id, false);
+        clientVendor.setIsDeleted(true);
+        clientVendorRepository.save(clientVendor);
 
     }
-
 
 }
