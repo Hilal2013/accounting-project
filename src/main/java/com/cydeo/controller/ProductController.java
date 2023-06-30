@@ -44,7 +44,7 @@ public class ProductController {
         }
         productService.save(product);
 
-        return "redirect:/products/create";
+        return "redirect:/products/list";
     }
 
     @GetMapping("/list")
