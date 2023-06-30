@@ -2,12 +2,13 @@ package com.cydeo.service;
 
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.Invoice;
+import com.cydeo.enums.InvoiceType;
 
 import java.util.List;
 
 public interface InvoiceService {
     InvoiceDTO findById(Long id);
-    InvoiceDTO save(InvoiceDTO invoiceDTO);
+    InvoiceDTO save(InvoiceDTO invoiceDTO, InvoiceType type);
     InvoiceDTO update(InvoiceDTO invoice);
     List<InvoiceDTO> listAllInvoice();
 
@@ -20,5 +21,5 @@ public interface InvoiceService {
     InvoiceDTO createNewPurchasesInvoice();
 
 
+    String findInvoiceId();
 }
-

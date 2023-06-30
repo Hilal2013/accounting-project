@@ -41,9 +41,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    public InvoiceDTO save(InvoiceDTO invoice) {
+    public InvoiceDTO save(InvoiceDTO invoice,InvoiceType type) {
         Invoice invoice1 = mapperUtil.convert(invoice, new Invoice());
-        invoice1.setId(invoice.getId());
+        invoice1.setInvoiceType(type);
+        invoice1.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         invoiceRepository.save(invoice1);
         return mapperUtil.convert(invoice1,new InvoiceDTO());
 
@@ -104,9 +105,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-        invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
-        invoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
         return invoiceDTO;
+
+    }
+
+    @Override
+    public String findInvoiceId() {
+
+    return String.valueOf(invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size());
 
     }
 

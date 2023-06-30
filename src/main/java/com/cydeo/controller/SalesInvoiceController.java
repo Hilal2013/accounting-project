@@ -41,7 +41,7 @@ public class SalesInvoiceController {
 
     @PostMapping("/create")
     public String saveSalesInvoice(@ModelAttribute("newSalesInvoice") InvoiceDTO invoice) {
-        invoiceService.save(invoice);
+       // invoiceService.save(invoice);
         return "invoice/sales-invoice-update";
     }
 
