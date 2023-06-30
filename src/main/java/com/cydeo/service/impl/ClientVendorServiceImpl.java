@@ -3,24 +3,27 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.ClientVendor;
+import com.cydeo.entity.Company;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.ClientVendorService;
+import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ClientVendorServiceImpl implements ClientVendorService {
     private final ClientVendorRepository clientVendorRepository;
     private final MapperUtil mapperUtil;
+    private final CompanyService companyService;
 
     public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository,
-                                   MapperUtil mapperUtil) {
+                                   MapperUtil mapperUtil, CompanyService companyService) {
         this.clientVendorRepository = clientVendorRepository;
         this.mapperUtil = mapperUtil;
+        this.companyService = companyService;
     }
 
     @Override
@@ -49,6 +52,9 @@ public class ClientVendorServiceImpl implements ClientVendorService {
                 .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find"));
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
+        CompanyDTO companyDTO =companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+       convertedClientVendor.setCompany(company);
         clientVendorRepository.save(convertedClientVendor);
         return mapperUtil.convert(convertedClientVendor, new ClientVendorDTO());
     }
