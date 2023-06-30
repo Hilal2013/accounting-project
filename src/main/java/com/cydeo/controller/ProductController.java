@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String insertProduct(@Valid @ModelAttribute("product") ProductDTO product, Model model, BindingResult bindingResult){
+    public String insertProduct(@Valid @ModelAttribute("newProduct") ProductDTO product, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
 
