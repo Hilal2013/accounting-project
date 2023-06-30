@@ -42,6 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice invoice1 = mapperUtil.convert(invoice, new Invoice());
         invoice1.setInvoiceType(type);
         invoice1.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
+        invoice1.setDate(LocalDate.now());
         invoiceRepository.save(invoice1);
         return mapperUtil.convert(invoice1,new InvoiceDTO());
 
