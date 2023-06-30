@@ -23,7 +23,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public String displayAllCategory(Model model){
-        model.addAttribute("categories", categoryService.getCategoryList());
+        model.addAttribute("categories", categoryService.listAllCategories());
         return "/category/category-list";
     }
 
@@ -37,6 +37,8 @@ public class CategoryController {
     public String createCategory(@ModelAttribute("newCategory")CategoryDTO categoryDTO, Model model){
         return "redirect:/categories/list";
     }
+
+
 
 
 }
