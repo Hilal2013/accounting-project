@@ -1,15 +1,20 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.InvoiceDTO;
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
+import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.repository.InvoiceRepository;
+import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +24,16 @@ import java.util.stream.Collectors;
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final CompanyService companyService;
+    private final ClientVendorService clientVendorService;
 
     private final MapperUtil mapperUtil;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, MapperUtil mapperUtil) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, ClientVendorRepository clientVendorRepository, ClientVendorService clientVendorService, MapperUtil mapperUtil) {
         this.invoiceRepository = invoiceRepository;
         this.companyService = companyService;
+        this.clientVendorService = clientVendorService;
+
+
         this.mapperUtil = mapperUtil;
     }
 
@@ -64,8 +73,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    public List<InvoiceDTO> listAllInvoice() {
-        return invoiceRepository.findAll().stream()
+    public List<InvoiceDTO> listAllInvoice(InvoiceType type) {
+        return invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(type).stream()
                 .map(invoice-> mapperUtil.convert(invoice, new InvoiceDTO()))
                 .collect(Collectors.toList());
 
@@ -93,7 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO createNewSalesInvoice() {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo("S-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.SALES).size() + 1));
+        invoiceDTO.setInvoiceNo("S-00" + (invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType.SALES).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
 
         return invoiceDTO;
@@ -102,17 +111,28 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO createNewPurchasesInvoice() {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceType(InvoiceType.PURCHASE).size() + 1));
+        invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
-
         return invoiceDTO;
 
     }
 
     @Override
     public String findInvoiceId() {
+
         return String.valueOf(invoiceRepository.findAll().size());
     }
 
 
+    public BigDecimal calculateTotal(InvoiceProductDTO dto){
+        return dto.getPrice().multiply(BigDecimal.valueOf(dto.getQuantity()));
+    }
+
+
+
+
+
 }
+
+
+

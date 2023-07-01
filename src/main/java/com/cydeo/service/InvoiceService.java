@@ -10,7 +10,7 @@ public interface InvoiceService {
     InvoiceDTO findById(Long id);
     InvoiceDTO save(InvoiceDTO invoiceDTO, InvoiceType type);
     InvoiceDTO update(InvoiceDTO invoice);
-    List<InvoiceDTO> listAllInvoice();
+    List<InvoiceDTO> listAllInvoice(InvoiceType type);
 
     InvoiceDTO delete(Long id);
 
@@ -22,4 +22,5 @@ public interface InvoiceService {
 
 
     String findInvoiceId();
+
 }

@@ -1,7 +1,9 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.InvoiceType;
 
 import java.util.List;
 
@@ -12,4 +14,6 @@ public interface InvoiceProductService {
     InvoiceProductDTO findById(Long id);
     InvoiceProductDTO findByInvoiceId(Long id);
     InvoiceProductDTO delete(Long invoiceProductId);
+
+
 }
