@@ -11,7 +11,7 @@ public interface ClientVendorRepository extends JpaRepository<ClientVendor,Long>
 
    ClientVendor findByIdAndIsDeleted(Long id, Boolean deleted);
 
-   List<ClientVendor> findAllByClientVendorType(ClientVendorType type);
+   List<ClientVendor> findAllByClientVendorTypeOrderByClientVendorNameAsc(ClientVendorType type);
 
 
 }
