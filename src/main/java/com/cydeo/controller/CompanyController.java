@@ -6,9 +6,9 @@ import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -37,9 +37,8 @@ public class CompanyController {
 
     @PostMapping("/create")
     public String saveCompany(@Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "/company/company-create";
-        }
+
+
 
         companyService.createCompany(companyDTO);
         return "redirect:/companies/list";
@@ -54,7 +53,13 @@ public class CompanyController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCompany(@PathVariable("id") Long id, @ModelAttribute("company") CompanyDTO companyDTO, Model model) {
+    public String updateCompany(@PathVariable("id") Long id, @Valid @ModelAttribute("company") CompanyDTO companyDTO,BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+
+            return "/company/company-update";
+        }
+
+
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }

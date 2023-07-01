@@ -7,8 +7,10 @@ import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +29,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO getCompanyDTOByLoggedInUser() {
-
         //find UserDTO who logged in and find company through id //convert Company entity to CompanyDTO
         Company company = companyRepository.findById
                         (securityService.getLoggedInUser().getCompany().getId())
@@ -44,10 +45,23 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDTO> getListOfCompanies() {
-        return companyRepository.findAll()
-                .stream()
-                .map(company -> mapperUtil.convert(company, new CompanyDTO()))
-                .collect(Collectors.toList());
+
+        if (securityService.getLoggedInUser().getRole().getDescription().equals("Root User")){
+
+            return companyRepository.getCompaniesSortedByStatusAndTitle()
+                    .stream()
+                    .filter(company -> company.getId() != 1)
+                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+                    .collect(Collectors.toList());
+        }else{
+            return companyRepository.findAllByTitle(getCompanyDTOByLoggedInUser().getTitle())
+                    .stream()
+                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+                    .collect(Collectors.toList());
+
+        }
+
+
     }
 
     @Override
@@ -81,4 +95,11 @@ public class CompanyServiceImpl implements CompanyService {
         company.setCompanyStatus(companyStatus);
         companyRepository.save(company);
     }
+
+
 }
+//  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
+//            List<Company> companiesByStatus= companyRepository.findAllByCompanyStatusIs(loggedInUserCompanyStatus);
+//            return companiesByStatus.stream()
+//                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+//              .collect(Collectors.toList());
