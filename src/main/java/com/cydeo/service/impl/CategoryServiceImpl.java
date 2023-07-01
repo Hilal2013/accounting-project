@@ -41,5 +41,22 @@ public class CategoryServiceImpl implements CategoryService {
         return mapperUtil.convert(category, new CategoryDTO());
     }
 
+    @Override
+    public CategoryDTO save(CategoryDTO categoryDTO) {
+        Category category = mapperUtil.convert(categoryDTO, new Category());
+        categoryRepository.save(category);
+        return mapperUtil.convert(category, new CategoryDTO());
+    }
+
+    @Override
+    public void updateCategory(Long id, CategoryDTO categoryDTO) {
+
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
 
 }
