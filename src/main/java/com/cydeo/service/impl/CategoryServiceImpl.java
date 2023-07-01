@@ -58,8 +58,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void delete(Long id) {
-
+    public void delete(Long categoryId) {
+        Category categoryInDb = categoryRepository.findById(categoryId).orElseThrow(()->
+                new NoSuchElementException("This category doesn't exist."));
+        categoryInDb.setDescription(categoryInDb.getDescription()+"-"+categoryInDb.getId());
+        categoryRepository.save(categoryInDb);
     }
 
 
