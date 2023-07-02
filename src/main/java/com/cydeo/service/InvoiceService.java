@@ -1,5 +1,7 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.CategoryDTO;
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
@@ -19,8 +21,7 @@ public interface InvoiceService {
     InvoiceDTO createNewSalesInvoice();
 
     InvoiceDTO createNewPurchasesInvoice();
-
-
     String findInvoiceId();
+
 
 }

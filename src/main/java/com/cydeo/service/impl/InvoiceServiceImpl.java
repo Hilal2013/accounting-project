@@ -1,8 +1,13 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
+import com.cydeo.entity.ClientVendor;
+import com.cydeo.entity.Company;
 import com.cydeo.entity.Invoice;
+import com.cydeo.enums.ClientVendorType;
+import com.cydeo.enums.CompanyStatus;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
@@ -68,11 +73,20 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
-    public List<InvoiceDTO> listAllInvoice(InvoiceType type) {
-        return invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(type).stream()
+    public List<InvoiceDTO> listAllInvoice(InvoiceType invoiceType) {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+
+        return invoiceRepository.xx(company).stream()
                 .map(invoice -> calculateTotal(invoice.getId()))
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO()))
                 .collect(Collectors.toList());
+
+    }
+
+    public CompanyDTO findCurrentCompany(){
+
+        return companyService.getCompanyDTOByLoggedInUser();
 
     }
 
@@ -119,6 +133,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return String.valueOf(invoiceRepository.findAll().size());
     }
 
+
     private InvoiceDTO calculateTotal(Long id) {
         InvoiceDTO invoiceDTO=findById(id);
         List<InvoiceProductDTO> productList = invoiceProductService.listAllInvoiceProduct(id);
@@ -135,9 +150,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDTO.setTotal(totalWithTax);
 
 
+
         return invoiceDTO;
 
     }
+
 }
 
 
