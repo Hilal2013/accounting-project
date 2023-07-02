@@ -61,14 +61,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         return mapperUtil.convert(updatedInvoice,new InvoiceDTO());
     }
 
-
-
     @Override
     public List<InvoiceDTO> listAllInvoice() {
-        return invoiceRepository.findAll().stream()
+        return invoiceRepository.findAllByIsDeletedIsNot(true).stream()
                 .map(invoice-> mapperUtil.convert(invoice, new InvoiceDTO()))
                 .collect(Collectors.toList());
-
     }
 
     @Override
