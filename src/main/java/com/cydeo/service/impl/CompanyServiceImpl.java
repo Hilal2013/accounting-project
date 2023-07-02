@@ -99,8 +99,8 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public boolean existByTitle(CompanyDTO companyDTO) {
         Company company =  companyRepository.findByTitle(companyDTO.getTitle());
-
-     return company!=null;
+        if (company == null) return false;
+     return company.getTitle().equals(companyDTO.getTitle());
     }
 }
 //  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();

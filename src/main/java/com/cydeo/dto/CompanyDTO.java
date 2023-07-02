@@ -37,6 +37,5 @@ public class CompanyDTO {
     private String website;
     @Valid
     private AddressDTO address;
-    @NotNull
     private CompanyStatus companyStatus;
 }
