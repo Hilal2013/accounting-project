@@ -7,10 +7,8 @@ import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +94,12 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
     }
 
-
+    @Override
+    public boolean existByTitle(CompanyDTO companyDTO) {
+        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
+        if (company == null) return false;
+        return company.getTitle().equals(companyDTO.getTitle());
+    }
 }
 //  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
 //            List<Company> companiesByStatus= companyRepository.findAllByCompanyStatusIs(loggedInUserCompanyStatus);
