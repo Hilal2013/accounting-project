@@ -35,23 +35,14 @@ public class CompanyController {
            return"company/company-create";
     }
 
-
     @PostMapping("/create")
-    public String saveCompany( @Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult
-            ,Model model) {
-        if (companyService.existByTitle(companyDTO)) {
-            bindingResult.rejectValue("title", "", "This title already exists.");
-        }
+    public String saveCompany(@Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult, Model model) {
 
-        if (bindingResult.hasErrors()) {
-            return "/company/company-create";
-        }
+
 
         companyService.createCompany(companyDTO);
-
         return "redirect:/companies/list";
     }
-
 
     @GetMapping("/update/{id}")
     public String editCompanyForm(@PathVariable("id") Long id,Model model) {
@@ -62,7 +53,7 @@ public class CompanyController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCompany(@PathVariable("id") Long id,  @ModelAttribute("company")  CompanyDTO companyDTO, Model model) {
+    public String updateCompany(@PathVariable("id") Long id, @ModelAttribute("company") CompanyDTO companyDTO, Model model) {
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }

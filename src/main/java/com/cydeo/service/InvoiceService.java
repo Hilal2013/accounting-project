@@ -1,5 +1,7 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.CategoryDTO;
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.Invoice;
 import com.cydeo.enums.InvoiceType;
@@ -10,7 +12,7 @@ public interface InvoiceService {
     InvoiceDTO findById(Long id);
     InvoiceDTO save(InvoiceDTO invoiceDTO, InvoiceType type);
     InvoiceDTO update(InvoiceDTO invoice);
-    List<InvoiceDTO> listAllInvoice();
+    List<InvoiceDTO> listAllInvoice(InvoiceType invoiceType);
 
     InvoiceDTO delete(Long id);
 
@@ -19,7 +21,7 @@ public interface InvoiceService {
     InvoiceDTO createNewSalesInvoice();
 
     InvoiceDTO createNewPurchasesInvoice();
-
-
     String findInvoiceId();
+
+
 }

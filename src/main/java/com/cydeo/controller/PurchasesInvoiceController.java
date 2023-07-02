@@ -1,18 +1,13 @@
 package com.cydeo.controller;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
-import com.cydeo.dto.ProductDTO;
 import com.cydeo.enums.ClientVendorType;
 import com.cydeo.enums.InvoiceType;
-import com.cydeo.service.ClientVendorService;
-import com.cydeo.service.InvoiceProductService;
-import com.cydeo.service.InvoiceService;
-import com.cydeo.service.ProductService;
-import com.sun.xml.bind.v2.TODO;
+import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -22,17 +17,19 @@ public class PurchasesInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ProductService productService;
     private final ClientVendorService clientVendorService;
+    private final CompanyService companyService;
 
-    public PurchasesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService) {
+    public PurchasesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService, CompanyService companyService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.productService = productService;
         this.clientVendorService = clientVendorService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/list")
     public String listAllPurchaseInvoices(Model model) {
-        model.addAttribute("invoices", invoiceService.listAllInvoice());
+        model.addAttribute("invoices", invoiceService.listAllInvoice(InvoiceType.PURCHASE));
         return "/invoice/purchase-invoice-list";
     }
 
@@ -62,7 +59,6 @@ public class PurchasesInvoiceController {
 
     @PostMapping("/update/{id}")
     public String updateInvoice(@PathVariable("id") Long id, @ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice) {
-
         invoiceService.save(invoice,InvoiceType.PURCHASE);
         invoiceService.createNewPurchasesInvoice();
         return "redirect:/purchaseInvoices/list";
@@ -89,15 +85,14 @@ public class PurchasesInvoiceController {
         invoiceService.approve(id);
         return "redirect:/purchaseInvoices/list";
     }
+    @GetMapping("/print/{invoiceId}")
+        public String removeInvoice(@PathVariable("invoiceId") Long invoiceId, Model model){
+            model.addAttribute("invoice",invoiceService.findById(invoiceId));
+            model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(invoiceId));
+            model.addAttribute("company", companyService.getCompanyDTOByLoggedInUser());
+            return "invoice/invoice_print";
+        }
 
-//    @GetMapping("/print/{id}")
-//        public String printPurchasesInvoice (@PathVariable Long id){
-//
-////        invoiceService.print(id);
-//            return "invoice/invoice_print";
-//
-//        }
-//    }
 
     @GetMapping("/removeInvoiceProduct/{invoiceId1}/{invoiceProductId}")
     public String deleteInvoiceProduct(@PathVariable("invoiceId1") Long id, @PathVariable("invoiceProductId") Long invoiceProductId) {
