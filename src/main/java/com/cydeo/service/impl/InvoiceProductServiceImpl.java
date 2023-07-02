@@ -1,10 +1,12 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.context.annotation.Lazy;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,17 +22,18 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     private final InvoiceProductRepository invoiceProductRepository;
     private final InvoiceService invoiceService;
+    private final CompanyService companyService;
     private final MapperUtil mapperUtil;
 
-    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, @Lazy InvoiceService invoiceService, MapperUtil mapperUtil) {
+    public InvoiceProductServiceImpl(InvoiceProductRepository invoiceProductRepository, @Lazy InvoiceService invoiceService, CompanyService companyService, MapperUtil mapperUtil) {
         this.invoiceProductRepository = invoiceProductRepository;
         this.invoiceService = invoiceService;
+        this.companyService = companyService;
         this.mapperUtil = mapperUtil;
     }
 
     @Override
     public List<InvoiceProductDTO> listAllInvoiceProduct(Long id) {
-
         return invoiceProductRepository.findAllByInvoiceId(id).stream()
                 .map(invoiceProduct -> calculateTotalInvoiceProduct(id))
                 .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDTO()))
@@ -52,7 +54,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public InvoiceProductDTO save(InvoiceProductDTO invoiceProductDTO, Long id) {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
         InvoiceDTO invoice = invoiceService.findById(id);
+        invoice.setCompany(companyDTO);
         invoiceProductDTO.setInvoice(invoice);
         InvoiceProduct invoiceProduct = invoiceProductRepository
                 .save(mapperUtil.convert(invoiceProductDTO, new InvoiceProduct()));
@@ -76,9 +80,6 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         invoiceProductRepository.save(invoiceProduct.orElseThrow());
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;
-    }
-    public BigDecimal calculateTotalWithTax(InvoiceProductDTO dto){
-        return dto.getPrice().multiply(BigDecimal.valueOf(dto.getQuantity())).add(BigDecimal.valueOf(dto.getTax()).multiply(dto.getPrice()));
     }
 
 }
