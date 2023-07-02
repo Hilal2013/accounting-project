@@ -20,7 +20,7 @@ public class InvoiceDTO {
     private CompanyDTO company;
     private ClientVendorDTO clientVendor;
     private BigDecimal price;
-    private Integer tax ;
+    private BigDecimal tax ;
     private BigDecimal total ;
 
 }

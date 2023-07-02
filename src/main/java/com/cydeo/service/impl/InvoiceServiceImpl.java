@@ -142,12 +142,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         BigDecimal tax=BigDecimal.valueOf(0);
         for (InvoiceProductDTO each : productList) {
             totalPrice = totalPrice.add(BigDecimal.valueOf(each.getQuantity()).multiply(each.getPrice()));
-            tax=tax.add(totalPrice.multiply(BigDecimal.valueOf(each.getTax().intValue())));
-            totalWithTax=totalPrice.add(tax);
+            tax=tax.add(BigDecimal.valueOf(each.getQuantity()).multiply(each.getPrice()).multiply(BigDecimal.valueOf(each.getTax()).divide(BigDecimal.valueOf(100))).setScale(2));
+            totalWithTax = totalPrice.add(tax);
+
         }
         invoiceDTO.setPrice(totalPrice);
-        invoiceDTO.setTax(tax.intValue()/100);
-        invoiceDTO.setTotal(totalWithTax);
+        invoiceDTO.setTax(tax);
+        invoiceDTO.setTotal(totalWithTax.setScale(2));
 
 
 
