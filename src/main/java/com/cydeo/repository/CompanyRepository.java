@@ -15,7 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company,Long> {
     List<Company> getCompaniesSortedByStatusAndTitle();
 
 List<Company>  findAllByTitle(String title);
-
+    Company findByTitle(String title);
 
 
 }
