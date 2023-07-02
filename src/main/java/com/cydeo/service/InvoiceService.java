@@ -12,7 +12,7 @@ public interface InvoiceService {
     InvoiceDTO findById(Long id);
     InvoiceDTO save(InvoiceDTO invoiceDTO, InvoiceType type);
     InvoiceDTO update(InvoiceDTO invoice);
-    List<InvoiceDTO> listAllInvoice(InvoiceType type);
+    List<InvoiceDTO> listAllInvoice(InvoiceType invoiceType);
 
     InvoiceDTO delete(Long id);
 

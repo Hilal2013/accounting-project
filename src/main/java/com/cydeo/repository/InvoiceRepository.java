@@ -17,8 +17,10 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
 
     Invoice findByIdAndIsDeleted(Long id,Boolean deleted);
     List<Invoice> findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType invoiceType);
-    @Query(value = "select *from invoices i join clients_vendors c on i.client_vendor_id=c.id where i.invoice_type='PURCHASE'",nativeQuery = true)
-    List<Invoice> xx(Company company);
+    List<Invoice> findAllByInvoiceTypeAndCompanyOrderByInvoiceNoDesc(InvoiceType invoiceType,Company company);
+
+
+
 
 
 

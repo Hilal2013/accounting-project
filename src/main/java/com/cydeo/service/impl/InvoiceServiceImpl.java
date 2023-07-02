@@ -77,7 +77,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
         Company company=mapperUtil.convert(companyDTO,new Company());
 
-        return invoiceRepository.xx(company).stream()
+        return invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNoDesc(invoiceType,company).stream()
                 .map(invoice -> calculateTotal(invoice.getId()))
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO()))
                 .collect(Collectors.toList());
