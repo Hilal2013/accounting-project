@@ -47,7 +47,7 @@ public class CategoryController {
         return "category/category-update";
     }
 
-    @PostMapping("/update{categoryId}")
+    @PostMapping("/update/{categoryId}")
     public String updateCategory(@PathVariable("categoryId") Long categoryId, @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
                                  BindingResult bindingResult, Model model) {
 
