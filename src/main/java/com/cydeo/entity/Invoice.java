@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "invoices")
-@Where(clause = "is_deleted=false")
 public class Invoice extends BaseEntity {
 
     private String invoiceNo;
