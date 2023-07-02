@@ -27,7 +27,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO getCompanyDTOByLoggedInUser() {
-
         //find UserDTO who logged in and find company through id //convert Company entity to CompanyDTO
         Company company = companyRepository.findById
                         (securityService.getLoggedInUser().getCompany().getId())
@@ -44,10 +43,23 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDTO> getListOfCompanies() {
-        return companyRepository.findAll()
-                .stream()
-                .map(company -> mapperUtil.convert(company, new CompanyDTO()))
-                .collect(Collectors.toList());
+
+        if (securityService.getLoggedInUser().getRole().getDescription().equals("Root User")){
+
+            return companyRepository.getCompaniesSortedByStatusAndTitle()
+                    .stream()
+                    .filter(company -> company.getId() != 1)
+                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+                    .collect(Collectors.toList());
+        }else{
+            return companyRepository.findAllByTitle(getCompanyDTOByLoggedInUser().getTitle())
+                    .stream()
+                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+                    .collect(Collectors.toList());
+
+        }
+
+
     }
 
     @Override
@@ -55,6 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.save(mapperUtil.convert(companyDTO, new Company()));
         //New created company's company status will be "Passive" as default
         company.setCompanyStatus(CompanyStatus.PASSIVE); // Set
+        companyRepository.save(company);
         return mapperUtil.convert(company, new CompanyDTO());
     }
 
@@ -66,6 +79,7 @@ public class CompanyServiceImpl implements CompanyService {
         //convert coming CompanyDTO to Company
         Company convertedCompany = mapperUtil.convert(companyDTO, new Company());
         convertedCompany.setId(company.getId());
+        convertedCompany.setCompanyStatus(company.getCompanyStatus());
         companyRepository.save(convertedCompany);
         return mapperUtil.convert(convertedCompany,new CompanyDTO());
 
@@ -79,4 +93,16 @@ public class CompanyServiceImpl implements CompanyService {
         company.setCompanyStatus(companyStatus);
         companyRepository.save(company);
     }
+
+    @Override
+    public boolean existByTitle(CompanyDTO companyDTO) {
+        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
+        if (company == null) return false;
+        return company.getTitle().equals(companyDTO.getTitle());
+    }
 }
+//  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
+//            List<Company> companiesByStatus= companyRepository.findAllByCompanyStatusIs(loggedInUserCompanyStatus);
+//            return companiesByStatus.stream()
+//                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
+//              .collect(Collectors.toList());
