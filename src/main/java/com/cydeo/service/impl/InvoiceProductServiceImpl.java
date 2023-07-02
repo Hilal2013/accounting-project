@@ -31,6 +31,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public List<InvoiceProductDTO> listAllInvoiceProduct(Long id) {
+
         return invoiceProductRepository.findAllByInvoiceId(id).stream()
                 .map(invoiceProduct -> calculateTotalInvoiceProduct(id))
                 .map(invoiceProduct -> mapperUtil.convert(invoiceProduct, new InvoiceProductDTO()))
