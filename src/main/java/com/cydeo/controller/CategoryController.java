@@ -41,6 +41,37 @@ public class CategoryController {
     }
 
 
+    @GetMapping("/update/{categoryId}")
+    public String showPageEditCategory(@PathVariable("categoryId") Long categoryId, Model model) {
+        model.addAttribute("category",categoryService.findById(categoryId));
+        return "category/category-update";
+    }
+
+    @PostMapping("/update{categoryId}")
+    public String updateCategory(@PathVariable("categoryId") Long categoryId, @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+                                 BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "category/category-update";
+        }
+        categoryService.updateCategory(categoryId,categoryDTO);
+        return "redirect:/categories/list";
+    }
+
+    @GetMapping("/delete/{categoryId}")
+    public String deleteCategory(@PathVariable("categoryId") Long categoryId){
+
+        categoryService.delete(categoryId);
+
+        return "redirect:/categories/list";
+    }
+
+
+
+}
+
+/*
+
     @GetMapping("/update/{id}")
     public String showPageEditCategory(@PathVariable("id") Long id, Model model) {
         model.addAttribute("category",categoryService.findById(id));
@@ -66,6 +97,5 @@ public class CategoryController {
         return "redirect:/categories/list";
     }
 
-
-
-}
+/// was working ,but not function
+ */
