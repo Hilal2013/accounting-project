@@ -96,7 +96,12 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(company);
     }
 
+    @Override
+    public boolean existByTitle(CompanyDTO companyDTO) {
+        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
 
+     return company!=null;
+    }
 }
 //  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
 //            List<Company> companiesByStatus= companyRepository.findAllByCompanyStatusIs(loggedInUserCompanyStatus);
