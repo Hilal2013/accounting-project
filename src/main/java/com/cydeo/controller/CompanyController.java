@@ -61,7 +61,17 @@ public class CompanyController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCompany(@PathVariable("id") Long id,  @ModelAttribute("company")  CompanyDTO companyDTO, Model model) {
+    public String updateCompany(@PathVariable("id") Long id, @Valid @ModelAttribute("company")  CompanyDTO companyDTO, BindingResult bindingResult,
+                                Model model) {
+
+        if (companyService.existByTitle(companyDTO)) {
+            bindingResult.rejectValue("title", "", "This title already exists.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "/company/company-update";
+        }
+
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }
