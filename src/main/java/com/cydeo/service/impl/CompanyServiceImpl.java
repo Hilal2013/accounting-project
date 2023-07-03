@@ -93,12 +93,17 @@ public class CompanyServiceImpl implements CompanyService {
         company.setCompanyStatus(companyStatus);
         companyRepository.save(company);
     }
-
     @Override
     public boolean existByTitle(CompanyDTO companyDTO) {
         Company company =  companyRepository.findByTitle(companyDTO.getTitle());
         if (company == null) return false;
         return company.getTitle().equals(companyDTO.getTitle());
+    }
+    @Override
+    public boolean existByTitleForUpdate(CompanyDTO companyDTO) {
+        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
+        if (company == null) return false;
+        return !company.getId().equals(companyDTO.getId());
     }
 }
 //  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
