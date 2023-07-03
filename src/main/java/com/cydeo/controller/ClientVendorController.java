@@ -39,7 +39,17 @@ public class ClientVendorController {
 
     @PostMapping("/create")
     public String saveCompany(@Valid @ModelAttribute("newClientVendor") ClientVendorDTO clientVendorDTO, BindingResult bindingResult, Model model) {
+
+        model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
+
+        // should be unique in current company client/vendors
+
+        if (clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO)) {
+            bindingResult.rejectValue("clientVendorName", "",
+                    "This Client/Vendor Name already exists.");
+        }
         if (bindingResult.hasErrors()) {
+
             return "/clientVendor/clientVendor-create";
         }
 
@@ -58,7 +68,15 @@ public class ClientVendorController {
 
     @PostMapping("update/{id}")
     public String updateClientVendor(@PathVariable("id") Long id, @Valid @ModelAttribute("clientVendor") ClientVendorDTO clientVendorDTO, BindingResult bindingResult, Model model) {
-
+        //TODO Countries will be provided by a third party API by consuming it.
+        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
+        clientVendorDTO.setId(id);
+        // should be unique in current company client/vendors
+        if (clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO)) {
+            bindingResult.rejectValue("clientVendorName", "",
+                    "This Client/Vendor in current company already exists.");
+        }
         if (bindingResult.hasErrors()) {
             return "clientVendor/clientVendor-update";
         }
