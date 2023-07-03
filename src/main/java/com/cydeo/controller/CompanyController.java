@@ -64,9 +64,12 @@ public class CompanyController {
     public String updateCompany(@PathVariable("id") Long id, @Valid @ModelAttribute("company")  CompanyDTO companyDTO, BindingResult bindingResult,
                                 Model model) {
 
-        if (companyService.existByTitle(companyDTO)) {
+        if (companyService.existByTitleForUpdate(companyDTO)) {
             bindingResult.rejectValue("title", "", "This title already exists.");
         }
+
+        //TODO Countries will be provided by a third party API by consuming it.
+        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
 
         if (bindingResult.hasErrors()) {
             return "/company/company-update";
