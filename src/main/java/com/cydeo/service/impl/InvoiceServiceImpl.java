@@ -93,12 +93,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO delete(Long id) {
         Invoice invoice = invoiceRepository.findByIdAndIsDeleted(id, false);
-        InvoiceDTO invoiceDTO = mapperUtil.convert(invoice, new InvoiceDTO());
-        if (invoiceDTO.getInvoiceStatus().getValue().equals("Awaiting Approval")) {
+        if (invoice.getInvoiceStatus().getValue().equals("Awaiting Approval")) {
             invoice.setIsDeleted(true);
             invoiceRepository.save(invoice);
         }
-        return invoiceDTO;
+        return mapperUtil.convert(invoice,new InvoiceDTO());
     }
 
     @Override
