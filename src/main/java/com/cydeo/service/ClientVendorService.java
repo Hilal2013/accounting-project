@@ -18,4 +18,6 @@ public interface ClientVendorService {
     void delete(Long id);
 
     List<ClientVendorDTO>  listAllClientVendor(ClientVendorType vendor);
+
+    boolean isExistClientVendorByCompanyName(ClientVendorDTO clientVendorDTO);
 }

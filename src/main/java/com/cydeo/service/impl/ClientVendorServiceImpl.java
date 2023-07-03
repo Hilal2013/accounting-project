@@ -35,7 +35,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public List<ClientVendorDTO> getListOfClientVendors() {
-        return clientVendorRepository.findAll()
+        return clientVendorRepository.getAllClientVendorsSortByTypeAndName()
                 .stream()
                 .map(clientVendor -> mapperUtil.convert(clientVendor, new ClientVendorDTO()))
                 .collect(Collectors.toList());
@@ -80,4 +80,15 @@ public class ClientVendorServiceImpl implements ClientVendorService {
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public boolean isExistClientVendorByCompanyName(ClientVendorDTO clientVendorDTO) {
+        // pass CV name and Company(convert)
+     ClientVendor clientVendor=   clientVendorRepository.findByClientVendorNameAndCompany(clientVendorDTO.getClientVendorName(),
+                mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(),new Company()));
+        if (clientVendor == null) return false;
+        return clientVendor.getClientVendorName().equals(clientVendorDTO.getClientVendorName());
+
+    }
+
 }
