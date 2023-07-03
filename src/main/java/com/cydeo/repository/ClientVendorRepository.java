@@ -19,4 +19,6 @@ public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long
     List<ClientVendor> getAllClientVendorsSortByTypeAndName();
 
     ClientVendor findByClientVendorNameAndCompany(String clientVendorName,Company company);
+    @Query("Select cv from ClientVendor cv  where cv.company.title =?1  Order By cv.clientVendorType asc,cv.clientVendorName asc")
+    List<ClientVendor> findAllByCompanyTitleAndSortByTypeAndName(String companyTitle);
 }
