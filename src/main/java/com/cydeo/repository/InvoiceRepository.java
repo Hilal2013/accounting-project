@@ -14,6 +14,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     List<Invoice> findAllByInvoiceType(InvoiceType invoiceType);
     List<Invoice> findAllByIsDeletedIsNot(Boolean isDeleted);
     List<Invoice> findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType invoiceType);
+    List<Invoice> findAllByInvoiceTypeAndCompanyAndIsDeletedOrderByInvoiceNoDesc(InvoiceType invoiceType,Company company,Boolean isDeleted);
     List<Invoice> findAllByInvoiceTypeAndCompanyOrderByInvoiceNoDesc(InvoiceType invoiceType,Company company);
-
 }

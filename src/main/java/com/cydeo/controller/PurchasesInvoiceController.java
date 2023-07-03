@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
@@ -8,7 +9,10 @@ import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/purchaseInvoices")
@@ -41,7 +45,12 @@ public class PurchasesInvoiceController {
     }
 
     @PostMapping("/create")
-    public String savePurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice) {
+    public String savePurchaseInvoice(@Valid @ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice,BindingResult bindingResult, Model model){
+        if (bindingResult.hasErrors()){
+            model.addAttribute("newPurchaseInvoice", invoiceService.createNewPurchasesInvoice());
+            model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
+           return "/invoice/purchase-invoice-create";
+        }
         invoiceService.save(invoice, InvoiceType.PURCHASE);
         String id = invoiceService.findInvoiceId();
         return "redirect:/purchaseInvoices/update/" + id;

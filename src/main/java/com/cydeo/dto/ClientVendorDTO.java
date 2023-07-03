@@ -6,12 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class ClientVendorDTO {
     private Long id;
+    @NotBlank(message = "This is a required field.")
     private String clientVendorName;
     private String phone;
     private String website;
