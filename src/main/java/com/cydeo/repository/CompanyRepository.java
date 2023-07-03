@@ -9,7 +9,7 @@ import java.util.List;
 public interface CompanyRepository extends JpaRepository<Company,Long> {
 
 
-    @Query(value = "SELECT c FROM Company c  ORDER BY c.companyStatus asc, c.title asc")
+    @Query("SELECT c FROM Company c  ORDER BY c.companyStatus asc, c.title asc")
     List<Company> getCompaniesSortedByStatusAndTitle();
 
     List<Company>  findAllByTitle(String title);

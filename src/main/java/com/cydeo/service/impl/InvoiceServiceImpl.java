@@ -93,12 +93,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO delete(Long id) {
         Invoice invoice = invoiceRepository.findByIdAndIsDeleted(id, false);
-        InvoiceDTO invoiceDTO = mapperUtil.convert(invoice, new InvoiceDTO());
-        if (invoiceDTO.getInvoiceStatus().getValue().equals("Awaiting Approval")) {
+        if (invoice.getInvoiceStatus().equals(InvoiceStatus.AWAITING_APPROVAL)) {
             invoice.setIsDeleted(true);
             invoiceRepository.save(invoice);
         }
-        return invoiceDTO;
+        return mapperUtil.convert(invoice,new InvoiceDTO());
     }
 
     @Override
@@ -123,6 +122,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType.PURCHASE).size() + 1));
         invoiceDTO.setDate(LocalDate.now());
+        invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         return invoiceDTO;
 
     }
