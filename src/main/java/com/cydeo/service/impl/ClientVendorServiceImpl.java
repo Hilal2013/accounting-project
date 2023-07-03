@@ -4,6 +4,7 @@ import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Company;
+import com.cydeo.enums.ClientVendorType;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.ClientVendorService;
@@ -42,7 +43,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public ClientVendorDTO createClientVendor(ClientVendorDTO clientVendorDTO) {
-        CompanyDTO companyDTO =companyService.getCompanyDTOByLoggedInUser();
+        CompanyDTO companyDTO = companyService.getCompanyDTOByLoggedInUser();
         clientVendorDTO.setCompanyDTO(companyDTO);
         ClientVendor clientVendor = clientVendorRepository.save(mapperUtil.convert(clientVendorDTO, new ClientVendor()));
         return mapperUtil.convert(clientVendor, new ClientVendorDTO());
@@ -58,6 +59,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         clientVendorRepository.save(convertedClientVendor);
         return mapperUtil.convert(convertedClientVendor, new ClientVendorDTO());
     }
+
     //soft delete
     @Override
     public void delete(Long id) {
@@ -68,4 +70,14 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     }
 
+    @Override
+    public List<ClientVendorDTO> listAllClientVendor(ClientVendorType type) {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+        List<ClientVendor> list = clientVendorRepository.findAllByClientVendorTypeAndCompanyOrderByClientVendorNameAsc(type,company);
+
+        return list.stream().map(vendor -> mapperUtil.convert(vendor, new ClientVendorDTO()))
+                .collect(Collectors.toList());
+
+    }
 }

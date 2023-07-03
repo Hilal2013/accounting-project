@@ -16,4 +16,7 @@ public interface CompanyService {
     CompanyDTO updateCompany(Long id,CompanyDTO companyDTO);
     void changeCompanyStatus(Long id, CompanyStatus companyStatus);
 
+    boolean existByTitle(CompanyDTO companyDTO);
+    boolean existByTitleForUpdate(CompanyDTO companyDTO);
+
 }
