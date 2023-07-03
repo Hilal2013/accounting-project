@@ -3,14 +3,12 @@ package com.cydeo.service.impl;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
-import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Company;
 import com.cydeo.entity.Invoice;
-import com.cydeo.enums.ClientVendorType;
-import com.cydeo.enums.CompanyStatus;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
+import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
@@ -29,13 +27,16 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final CompanyService companyService;
     private final InvoiceProductService invoiceProductService;
+    private final InvoiceProductRepository invoiceProductRepository;
+
 
     private final MapperUtil mapperUtil;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, MapperUtil mapperUtil) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil) {
         this.invoiceRepository = invoiceRepository;
         this.companyService = companyService;
         this.invoiceProductService = invoiceProductService;
+        this.invoiceProductRepository = invoiceProductRepository;
         this.mapperUtil = mapperUtil;
     }
 
@@ -77,7 +78,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
         Company company=mapperUtil.convert(companyDTO,new Company());
 
-        return invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNoDesc(invoiceType,company).stream()
+        return invoiceRepository.findAllByInvoiceTypeAndCompanyAndIsDeletedOrderByInvoiceNoDesc(invoiceType,company,false).stream()
                 .map(invoice -> calculateTotal(invoice.getId()))
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO()))
                 .collect(Collectors.toList());
@@ -91,14 +92,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO delete(Long id) {
-        Invoice invoice = invoiceRepository.findByIdAndIsDeleted(id, false);
+    public InvoiceDTO delete(Long invoiceId) {
+        Invoice invoice = invoiceRepository.findByIdAndIsDeleted(invoiceId, false);
         if (invoice.getInvoiceStatus().equals(InvoiceStatus.AWAITING_APPROVAL)) {
             invoice.setIsDeleted(true);
-            invoiceRepository.save(invoice);
+
         }
+        invoiceProductRepository.findAllByInvoiceId(invoice.getId()).stream()
+                    .map(invoiceProduct -> invoiceProductService.delete(invoiceProduct.getId())).collect(Collectors.toList());
+        invoiceRepository.save(invoice);
         return mapperUtil.convert(invoice,new InvoiceDTO());
-    }
+        }
+
 
     @Override
     public InvoiceDTO approve(Long id) {
@@ -119,11 +124,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO createNewPurchasesInvoice() {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
         InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo("P-00" + (invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType.PURCHASE).size() + 1));
+        int no = invoiceRepository.findAllByInvoiceTypeAndCompanyOrderByInvoiceNoDesc(InvoiceType.PURCHASE,company).size() + 1;
+        if(no<10) invoiceDTO.setInvoiceNo("P-00" + no);
+        else if(no<100 && no>=10)  invoiceDTO.setInvoiceNo("P-0" + no);
+        else  invoiceDTO.setInvoiceNo("P-" + no);
         invoiceDTO.setDate(LocalDate.now());
         invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         return invoiceDTO;
+
 
     }
 
