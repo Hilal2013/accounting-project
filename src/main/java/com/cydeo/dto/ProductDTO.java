@@ -7,6 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 public class ProductDTO {
     private Long id;
+
+
     private String name;
     private int quantityInStock;
     private int lowLimitAlert;
