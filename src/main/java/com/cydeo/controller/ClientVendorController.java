@@ -71,7 +71,7 @@ public class ClientVendorController {
         //TODO Countries will be provided by a third party API by consuming it.
         model.addAttribute("countries", List.of("USA", "UK", "Germany"));
         model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
-
+        clientVendorDTO.setId(id);
         // should be unique in current company client/vendors
         if (clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO)) {
             bindingResult.rejectValue("clientVendorName", "",
