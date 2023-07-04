@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
 
 @Controller
@@ -56,9 +57,15 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public String insertUser(@ModelAttribute("newUser") UserDTO user, BindingResult bindingResult, Model model) {
+    public String insertUser(@Valid @ModelAttribute("newUser") UserDTO user, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
+
+
+            model.addAttribute("users", userService.listAllUsers());
+            model.addAttribute("userRoles",roleService.listAllRoles());
+            model.addAttribute("companies", companyService.getListOfCompanies());
+
 
             return "/user/user-create";
 
@@ -85,7 +92,7 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUser(@ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
+    public String updateUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
 
