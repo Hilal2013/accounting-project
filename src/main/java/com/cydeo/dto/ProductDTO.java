@@ -19,9 +19,9 @@ public class ProductDTO {
     private int quantityInStock;
 
     @NotNull(message = "low limit alert is a required field")
+    @Min(1)
     private int lowLimitAlert;
     @NotNull(message = "Product unit is a required field.")
-    @Min(1)
     private ProductUnit productUnit;
 
     @NotNull(message = "Category is a required field.")
