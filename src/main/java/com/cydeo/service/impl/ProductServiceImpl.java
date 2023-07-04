@@ -90,16 +90,13 @@ public class ProductServiceImpl implements ProductService {
         return mapperUtil.convert(convertedProduct,new ProductDTO());
     }
 
-//    /**
-//     *
-//     * @param company
-//     * @return
-//     */
-//    @Override
-//    public List<ProductDTO> findProcuctsByCompany(Company company) {
-//        List<Product> product = productRepository.findAllByCompany(company);
-//        return product.stream().map(product1 -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
-//    }
+    @Override
+    public boolean productExists(ProductDTO productDTO) {
 
-
+        Product product = productRepository.findByName(productDTO.getName());
+        if(product == null){
+            return false;
+        }
+        return product.getName().equals(productDTO.getName());
+    }
 }
