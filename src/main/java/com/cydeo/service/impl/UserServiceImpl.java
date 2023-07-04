@@ -5,6 +5,7 @@ import com.cydeo.dto.UserDTO;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
+import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final SecurityService securityService;
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(SecurityService securityService, MapperUtil mapperUtil, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.securityService = securityService;
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -28,11 +31,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO findByUsername(String userName) {
-
         User user = userRepository.findByUsername(userName);
-
         return mapperUtil.convert(user, new UserDTO());
     }
+
+
 
     @Override
     public UserDTO findById(Long id) {
@@ -43,7 +46,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> listAllUsers() {
         List<User> userList = userRepository.findAllByIsDeletedOrderByFirstnameDesc(false);
-        return userList.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+
+       userList.stream().map(user -> userRepository.getUsersSortedByCompanyAndRole());
+
+
+        if(!securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("root user")){
+            return userList.stream().filter(user -> !user.getRole().getDescription().equalsIgnoreCase("root user")).
+                    map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+        }else {
+            return userList.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+        }
     }
 
     @Override
@@ -73,6 +85,23 @@ public class UserServiceImpl implements UserService {
             user.setUsername(user.getUsername()+"-"+ user.getId());
             userRepository.save(user);
         }
+
+    @Override
+    public boolean existByUsername(UserDTO userDTO) {
+        User user = userRepository.findByUsername(userDTO.getUsername());
+        if (user == null) return false;
+        return user.getUsername().equalsIgnoreCase(userDTO.getUsername());
+    }
+
+    @Override
+    public boolean existByUsernameForUpdate(UserDTO userDTO) {
+        User user =  userRepository.findByUsername(userDTO.getUsername());
+        if (user == null) return false;
+        return !user.getId().equals(userDTO.getId());
+    }
+
+
+
 
 
 

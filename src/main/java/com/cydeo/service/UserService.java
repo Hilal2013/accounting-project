@@ -1,5 +1,6 @@
 package com.cydeo.service;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.UserDTO;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public interface UserService {
     UserDTO update(UserDTO user);
 
     void delete(Long id);
+    boolean existByUsername(UserDTO userDTO);
 
+    boolean existByUsernameForUpdate(UserDTO userDTO);
 
 }
 
