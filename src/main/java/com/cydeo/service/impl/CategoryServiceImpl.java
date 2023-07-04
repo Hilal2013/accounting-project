@@ -1,11 +1,11 @@
 package com.cydeo.service.impl;
 
 import com.cydeo.dto.CategoryDTO;
-import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CategoryRepository;
+import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Service;
@@ -21,18 +21,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final MapperUtil mapperUtil;
+    private final CompanyRepository companyRepository;
     private final CompanyService companyService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, CompanyService companyService) {
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, CompanyService companyService, CompanyRepository companyRepository, CompanyService companyService1) {
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
-        this.companyService = companyService;
+        this.companyRepository = companyRepository;
+        this.companyService = companyService1;
     }
 
     @Override
     public List<CategoryDTO> listAllCategories() {
 
-        List<Category> categoriesList = categoryRepository.findAll();
+        List<Category> categoriesList = categoryRepository.listAllCategoriesByCompany();
         return categoriesList.stream().map(
 
                 category ->
@@ -73,15 +76,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
+
     @Override
     public List<CategoryDTO> listAllCategoriesByCompany(){
         List<Category> categoryList = categoryRepository
-                .getAllProductsOrderByCompanyCompanyAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+                .getAllCategoriesOrderByCompanyAsc(companyService.getCompanyDTOByLoggedInUser().getId());
         return categoryList.stream()
                 .sorted(Comparator.comparing(Category::getDescription))
                 .map(category -> mapperUtil.convert(category, new CategoryDTO()))
                 .collect(Collectors.toList());
     }
 
-
 }
+
+/*
+
+    @Override
+    public List<CategoryDTO> listAllCategoriesByCompany(Company company) {
+        return null;
+    }
+
+
+ */
