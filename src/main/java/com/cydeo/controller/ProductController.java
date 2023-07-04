@@ -78,8 +78,7 @@ public class ProductController {
         if(bindingResult.hasErrors()){
             model.addAttribute("categories", categoryService.listAllCategories());
             model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
-            model.addAttribute("product", productService.findById(productId));
-            return "/product/product-list";
+            return "/product/product-update";
         }
         productService.update(productId,product);
 
