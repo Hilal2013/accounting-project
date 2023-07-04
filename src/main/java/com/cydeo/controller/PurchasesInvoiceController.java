@@ -47,9 +47,8 @@ public class PurchasesInvoiceController {
     @PostMapping("/create")
     public String savePurchaseInvoice(@Valid @ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice,BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
-            model.addAttribute("newPurchaseInvoice", invoiceService.createNewPurchasesInvoice());
             model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
-           return "/invoice/purchase-invoice-create";
+            return "/invoice/purchase-invoice-create";
         }
         invoiceService.save(invoice, InvoiceType.PURCHASE);
         String id = invoiceService.findInvoiceId();
@@ -75,7 +74,13 @@ public class PurchasesInvoiceController {
 
 
     @PostMapping("/addInvoiceProduct/{invoiceId}")
-    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id, @ModelAttribute InvoiceProductDTO invoiceProductDTO, Model model) {
+    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id,@Valid @ModelAttribute InvoiceProductDTO invoiceProductDTO,BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()){
+//            model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
+//            model.addAttribute("products", productService.listAllProducts());
+            return "redirect:/purchaseInvoices/update/"+id;
+        }
         invoiceProductService.save(invoiceProductDTO, id);
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));
         return "redirect:/purchaseInvoices/update/" + id;
