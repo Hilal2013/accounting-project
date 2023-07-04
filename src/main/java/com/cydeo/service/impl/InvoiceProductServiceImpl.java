@@ -42,6 +42,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private InvoiceProductDTO calculateTotalInvoiceProduct(Long invoiceProductId){
         InvoiceProductDTO invoiceProductDTO=findById(invoiceProductId);
         BigDecimal total=BigDecimal.ZERO;
+        if (invoiceProductDTO.getQuantity() == null || invoiceProductDTO.getPrice() == null || invoiceProductDTO.getTax()==null) {
+            throw new IllegalArgumentException("Quantity or price is null");
+        }
         List<InvoiceProduct> list =invoiceProductRepository.findAllByIdAndIsDeleted(invoiceProductDTO.getId(),false);
         for (InvoiceProduct each : list) {
             total=total.add(each.getPrice().multiply(BigDecimal.valueOf(each.getQuantity())));//15
