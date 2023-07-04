@@ -42,8 +42,23 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO findById(Long id) {
-
-        return mapperUtil.convert(invoiceRepository.findByIdAndIsDeleted(id,false), new InvoiceDTO());
+        InvoiceDTO invoiceDTO = mapperUtil.convert(invoiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invoice couldn't find.")), new InvoiceDTO());
+        List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+        BigDecimal subtotal = BigDecimal.ZERO;
+        BigDecimal tax = BigDecimal.ZERO;
+        BigDecimal grandTotal = BigDecimal.ZERO;
+        for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+            BigDecimal price = invoiceProductDTO.getPrice()
+                    .multiply(BigDecimal.valueOf(invoiceProductDTO.getQuantity()));
+            subtotal = subtotal.add(price);
+            tax = tax.add(price.multiply(BigDecimal.valueOf((invoiceProductDTO.getTax() * 0.01))));
+        }
+        grandTotal = subtotal.add(tax);
+        invoiceDTO.setPrice(subtotal);
+        invoiceDTO.setTax(tax);
+        invoiceDTO.setTotal(grandTotal);
+        return invoiceDTO;
     }
 
 
