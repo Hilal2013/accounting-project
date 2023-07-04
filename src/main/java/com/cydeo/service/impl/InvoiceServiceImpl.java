@@ -115,10 +115,13 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public InvoiceDTO createNewSalesInvoice() {
+        CompanyDTO companyDTO = companyService.getCompanyDTOByLoggedInUser();
+        Company company = mapperUtil.convert(companyDTO,new Company());
         InvoiceDTO invoiceDTO = new InvoiceDTO();
-        invoiceDTO.setInvoiceNo("S-00" + (invoiceRepository.findAllByInvoiceTypeOrderByInvoiceNoDesc(InvoiceType.SALES).size() + 1));
+        int no = invoiceRepository.retrieveInvoiceByTypeAndCompany(InvoiceType.SALES, company).size() + 1;
+        invoiceDTO.setInvoiceNo(no < 10 ? "S-00" + no : no < 100 ? "S-0" + no : "S-" + no);
         invoiceDTO.setDate(LocalDate.now());
-
+        invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         return invoiceDTO;
     }
 
