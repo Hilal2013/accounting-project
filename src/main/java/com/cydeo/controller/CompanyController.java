@@ -6,7 +6,6 @@ import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,18 +31,26 @@ public class CompanyController {
         model.addAttribute("newCompany",new CompanyDTO());
         //TODO Countries will be provided by a third party API by consuming it.
         model.addAttribute("countries", List.of("USA", "UK", "Germany"));
-           return"company/company-create";
+        return"company/company-create";
     }
 
+
     @PostMapping("/create")
-    public String saveCompany(@Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult, Model model) {
+    public String saveCompany( @Valid @ModelAttribute("newCompany") CompanyDTO companyDTO, BindingResult bindingResult
+            ,Model model) {
+        if (companyService.existByTitle(companyDTO)) {
+            bindingResult.rejectValue("title", "", "This title already exists.");
+        }
+
         if (bindingResult.hasErrors()) {
             return "/company/company-create";
         }
 
         companyService.createCompany(companyDTO);
+
         return "redirect:/companies/list";
     }
+
 
     @GetMapping("/update/{id}")
     public String editCompanyForm(@PathVariable("id") Long id,Model model) {
@@ -54,11 +61,24 @@ public class CompanyController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateCompany(@PathVariable("id") Long id, @ModelAttribute("company") CompanyDTO companyDTO, Model model) {
+    public String updateCompany(@PathVariable("id") Long id, @Valid @ModelAttribute("company")  CompanyDTO companyDTO, BindingResult bindingResult,
+                                Model model) {
+
+        if (companyService.existByTitleForUpdate(companyDTO)) {
+            bindingResult.rejectValue("title", "", "This title already exists.");
+        }
+
+        //TODO Countries will be provided by a third party API by consuming it.
+        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+
+        if (bindingResult.hasErrors()) {
+            return "/company/company-update";
+        }
+
         companyService.updateCompany(id,companyDTO);
         return "redirect:/companies/list";
     }
-// Activate and Deactivate functions
+    // Activate and Deactivate functions
     @GetMapping("/activate/{id}")
     public String activateCompany(@PathVariable Long id) {
         companyService.changeCompanyStatus(id, CompanyStatus.ACTIVE);

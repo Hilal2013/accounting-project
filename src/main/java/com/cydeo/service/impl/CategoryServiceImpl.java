@@ -8,6 +8,7 @@ import com.cydeo.service.CategoryService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,30 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> category = categoryRepository.findById(parseLong);
 
         return mapperUtil.convert(category, new CategoryDTO());
+    }
+
+    @Override
+    public CategoryDTO save(CategoryDTO categoryDTO) {
+        Category category = mapperUtil.convert(categoryDTO, new Category());
+        categoryRepository.save(category);
+        return mapperUtil.convert(category, new CategoryDTO());
+    }
+
+    @Override
+    public CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO) {
+        Category categoryInDb = categoryRepository.findById(categoryId).orElseThrow(()->
+        new NoSuchElementException("This category doesn't exist."));
+        categoryInDb.setDescription(categoryDTO.getDescription());
+        return mapperUtil.convert(categoryRepository.save(categoryInDb), new CategoryDTO());
+    }
+
+    @Override
+    public void delete(Long categoryId) {
+        Category categoryInDb = categoryRepository.findById(categoryId).orElseThrow(()->
+                new NoSuchElementException("This category doesn't exist."));
+        categoryInDb.setIsDeleted(true);
+        categoryInDb.setDescription(categoryInDb.getDescription()+"-"+categoryInDb.getId());
+        categoryRepository.save(categoryInDb);
     }
 
 
