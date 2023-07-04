@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> getAllProductsOrderByCompanyCompanyAsc(Long id);
+    List<Category> getAllCategoriesOrderByCompanyAsc(Long id);
 
+    List<Category> listAllCategoriesByCompany();
 }
+
