@@ -22,11 +22,8 @@ public class InvoiceDTO {
     @DateTimeFormat(pattern = "MMMM dd,yyyy")
     private LocalDate date;
     private CompanyDTO company;
-
-
-    @NotNull(message = "sdfgh")
+    @NotNull
     private ClientVendorDTO clientVendor;
-
     private BigDecimal price;
     private BigDecimal tax ;
     private BigDecimal total ;

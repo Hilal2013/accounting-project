@@ -18,15 +18,13 @@ public class InvoiceProductDTO {
 
     private Long id;
     @NotNull
-    @Min(value = 1, message = "Quantity cannot less than 1")
-    @Max(value = 100, message = "Quantity cannot be greater than 100")
+    @Range(min=1,max = 100)
     private Integer quantity;
     @NotNull
-    @Min(1)
+    @Min(value = 1)
     private BigDecimal price;
-    @NotNull(message = "sdfghjk")
-    @Min(1)
-    @Max(20)
+    @NotNull
+    @Range(min=1,max = 20)
     private Integer tax;
     private BigDecimal total;
     private BigDecimal profitLoss;
