@@ -4,10 +4,7 @@ import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.enums.ClientVendorType;
 import com.cydeo.enums.InvoiceType;
-import com.cydeo.service.ClientVendorService;
-import com.cydeo.service.InvoiceProductService;
-import com.cydeo.service.InvoiceService;
-import com.cydeo.service.ProductService;
+import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +17,14 @@ public class SalesInvoiceController {
     private final InvoiceProductService invoiceProductService;
     private final ProductService productService;
     private final ClientVendorService clientVendorService;
+    private final CompanyService companyService;
 
-    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService) {
+    public SalesInvoiceController(InvoiceService invoiceService, InvoiceProductService invoiceProductService, ProductService productService, ClientVendorService clientVendorService, CompanyService companyService) {
         this.invoiceService = invoiceService;
         this.invoiceProductService = invoiceProductService;
         this.productService = productService;
         this.clientVendorService = clientVendorService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/list")
@@ -91,9 +90,11 @@ public class SalesInvoiceController {
         return "redirect:/salesInvoices/update/"+id;
     }
 
-    @GetMapping("print/{id}")
-    public String printSalesInvoice(@PathVariable Long id) {
-//        invoiceService.print(id);
+    @GetMapping("/print/{invoiceId}")
+    public String removeInvoice(@PathVariable("invoiceId") Long invoiceId, Model model){
+        model.addAttribute("invoice",invoiceService.findById(invoiceId));
+        model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(invoiceId));
+        model.addAttribute("company", companyService.getCompanyDTOByLoggedInUser());
         return "invoice/invoice_print";
     }
 
