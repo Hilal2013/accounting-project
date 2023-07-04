@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.dto.ProductDTO;
 import com.cydeo.entity.Product;
 import com.cydeo.mapper.MapperUtil;
@@ -78,6 +79,16 @@ public class ProductServiceImpl implements ProductService {
         convertedProduct.setId(product.getId());
         productRepository.save(convertedProduct);
         return mapperUtil.convert(convertedProduct,new ProductDTO());
+    }
+
+    @Override
+    public boolean checkQuantity(InvoiceProductDTO invoiceProductDTO) {
+        Product product = productRepository.findByName(invoiceProductDTO.getProduct().getName());
+        if (product.getQuantityInStock() >= invoiceProductDTO.getQuantity()) {
+            product.setQuantityInStock(product.getQuantityInStock() - invoiceProductDTO.getQuantity());
+            return false;
+        }
+        return true;
     }
 
 

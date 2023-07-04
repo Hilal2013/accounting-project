@@ -7,7 +7,10 @@ import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/salesInvoices")
@@ -41,7 +44,11 @@ public class SalesInvoiceController {
     }
 
     @PostMapping("/create")
-    public String saveSalesInvoice(@ModelAttribute("newSalesInvoice") InvoiceDTO invoice) {
+    public String saveSalesInvoice(@Valid @ModelAttribute("newSalesInvoice") InvoiceDTO invoice, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("clients", clientVendorService.listAllClientVendor(ClientVendorType.CLIENT));
+            return "invoice/sales-invoice-create";
+        }
         invoiceService.save(invoice, InvoiceType.SALES);
         String id = invoiceService.findInvoiceId();
         return "redirect:/salesInvoices/update/"+id;
@@ -63,13 +70,26 @@ public class SalesInvoiceController {
         invoiceService.createNewSalesInvoice();
         return "redirect:/salesInvoices/list";
     }
+
     @PostMapping("/addInvoiceProduct/{invoiceId}")
-    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id, @ModelAttribute InvoiceProductDTO invoiceProductDTO, Model model) {
+    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id,
+                                     @Valid @ModelAttribute("newInvoiceProduct") InvoiceProductDTO invoiceProductDTO,
+                                     BindingResult bindingResult, Model model) {
+        if (productService.checkQuantity(invoiceProductDTO)) {
+            bindingResult.rejectValue("quantity", "",
+                    "Not enough " + "<" + invoiceProductDTO.getProduct().getName() + ">" + " quantity to sell...");
+        }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("invoice", invoiceService.findById(id));
+            model.addAttribute("clients", clientVendorService.listAllClientVendor(ClientVendorType.CLIENT));
+            model.addAttribute("products", productService.listAllProducts());
+            return "/invoice/sales-invoice-update";
+        }
         invoiceProductService.save(invoiceProductDTO, id);
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));
         return "redirect:/salesInvoices/update/" + id;
-
     }
+
     @GetMapping("/delete/{id}")
     public String deleteSalesInvoiceById(@PathVariable("id") Long id) {
         invoiceService.delete(id);
