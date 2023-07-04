@@ -1,10 +1,14 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.ProductDTO;
 import com.cydeo.entity.Product;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.mapper.ProductMapper;
+import com.cydeo.repository.CategoryRepository;
 import com.cydeo.repository.ProductRepository;
+import com.cydeo.service.CategoryService;
+import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +22,21 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final MapperUtil mapperUtil;
     private final ProductMapper productMapper;
+    private final CompanyService companyService;
 
-    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, ProductMapper productMapper) {
+
+    public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, ProductMapper productMapper, CategoryRepository categoryRepository, CategoryService categoryService, CompanyService companyService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.productMapper = productMapper;
+        this.companyService = companyService;
     }
 
     @Override
     public List<ProductDTO> listAllProducts() {
 
-        List<Product> productsList = productRepository.findAll();
+        CompanyDTO company = companyService.getCompanyDTOByLoggedInUser();
+        List<Product> productsList = productRepository.findAllByCategory_Company_IdOrderByCategoryAscNameAsc(company.getId());
 
         return productsList.stream().map(
 
@@ -47,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO findById(Long id) {
+
 
         Optional<Product> product = productRepository.findById(id);
         if(product.isPresent()){
@@ -79,6 +88,17 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(convertedProduct);
         return mapperUtil.convert(convertedProduct,new ProductDTO());
     }
+
+//    /**
+//     *
+//     * @param company
+//     * @return
+//     */
+//    @Override
+//    public List<ProductDTO> findProcuctsByCompany(Company company) {
+//        List<Product> product = productRepository.findAllByCompany(company);
+//        return product.stream().map(product1 -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
+//    }
 
 
 }
