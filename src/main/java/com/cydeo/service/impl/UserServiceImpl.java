@@ -47,12 +47,15 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> listAllUsers() {
         List<User> userList = userRepository.findAllByIsDeletedOrderByFirstnameDesc(false);
 
-       userList.stream().map(user -> userRepository.getUsersSortedByCompanyAndRole());
+
 
 
         if(!securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("root user")){
-            return userList.stream().filter(user -> !user.getRole().getDescription().equalsIgnoreCase("root user")).
-                    map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+            return userList.stream()
+
+                    .filter(user -> !user.getRole().getDescription().equalsIgnoreCase("root user"))
+                    .map(user -> mapperUtil.convert(user, new UserDTO()))
+                    .collect(Collectors.toList());
         }else {
             return userList.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
         }
