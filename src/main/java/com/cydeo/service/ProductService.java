@@ -13,6 +13,10 @@ public interface ProductService  {
     public void delete(Long id);
     public ProductDTO update(Long id, ProductDTO dto);
 
-    boolean checkQuantity(InvoiceProductDTO invoiceProductDTO);
+    boolean checkInventory(InvoiceProductDTO invoiceProductDTO);
+
+    ProductDTO increaseProductInventory(Long id, Integer amount);
+
+    ProductDTO decreaseProductInventory(Long id, Integer amount);
 
 }

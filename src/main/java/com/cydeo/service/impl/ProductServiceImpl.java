@@ -82,13 +82,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean checkQuantity(InvoiceProductDTO invoiceProductDTO) {
-        Product product = productRepository.findByName(invoiceProductDTO.getProduct().getName());
-        if (product.getQuantityInStock() >= invoiceProductDTO.getQuantity()) {
-            product.setQuantityInStock(product.getQuantityInStock() - invoiceProductDTO.getQuantity());
+    public boolean checkInventory(InvoiceProductDTO invoiceProductDTO) {
+        if (invoiceProductDTO.getProduct() == null) {
             return false;
         }
-        return true;
+        Product product = productRepository.findByName(invoiceProductDTO.getProduct().getName());
+        return product.getQuantityInStock() < invoiceProductDTO.getQuantity();
+    }
+
+    @Override
+    public ProductDTO increaseProductInventory(Long id, Integer amount) {
+        Product product = productRepository.findById(id).orElseThrow();
+        product.setQuantityInStock(product.getQuantityInStock() + amount);
+        return productMapper.convertToDto(product);
+    }
+
+    @Override
+    public ProductDTO decreaseProductInventory(Long id, Integer amount) {
+        Product product = productRepository.findById(id).orElseThrow();
+        product.setQuantityInStock(product.getQuantityInStock() - amount);
+        return productMapper.convertToDto(product);
     }
 
 

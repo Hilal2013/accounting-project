@@ -5,6 +5,7 @@ import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.Company;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
@@ -13,6 +14,7 @@ import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +30,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final CompanyService companyService;
     private final InvoiceProductService invoiceProductService;
     private final InvoiceProductRepository invoiceProductRepository;
+    private final ProductService productService;
 
 
     private final MapperUtil mapperUtil;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, ProductService productService, MapperUtil mapperUtil) {
         this.invoiceRepository = invoiceRepository;
         this.companyService = companyService;
         this.invoiceProductService = invoiceProductService;
         this.invoiceProductRepository = invoiceProductRepository;
+        this.productService = productService;
         this.mapperUtil = mapperUtil;
     }
 
@@ -123,6 +127,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO approve(Long id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow();
+        if (invoice.getInvoiceType().getValue().equals(InvoiceType.PURCHASE.getValue())) {
+            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+            for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+                Long productId = invoiceProductDTO.getProduct().getId();
+                Integer amount = invoiceProductDTO.getQuantity();
+                productService.increaseProductInventory(productId, amount);
+            }
+        } else if (invoice.getInvoiceType().getValue().equals(InvoiceType.SALES.getValue())) {
+            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+            for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+                Long productId = invoiceProductDTO.getProduct().getId();
+                Integer amount = invoiceProductDTO.getQuantity();
+                productService.decreaseProductInventory(productId, amount);
+            }
+        }
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceRepository.save(invoice);
         return mapperUtil.convert(invoice, new InvoiceDTO());
@@ -184,6 +203,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceDTO;
 
     }
+
 
 }
 

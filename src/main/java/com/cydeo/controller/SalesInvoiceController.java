@@ -75,7 +75,7 @@ public class SalesInvoiceController {
     public String addInvoiceProduct1(@PathVariable("invoiceId") Long id,
                                      @Valid @ModelAttribute("newInvoiceProduct") InvoiceProductDTO invoiceProductDTO,
                                      BindingResult bindingResult, Model model) {
-        if (productService.checkQuantity(invoiceProductDTO)) {
+        if (productService.checkInventory(invoiceProductDTO)) {
             bindingResult.rejectValue("quantity", "",
                     "Not enough " + "<" + invoiceProductDTO.getProduct().getName() + ">" + " quantity to sell...");
         }
