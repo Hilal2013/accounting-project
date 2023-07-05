@@ -19,4 +19,6 @@ public interface ProductService  {
 
     ProductDTO decreaseProductInventory(Long id, Integer amount);
 
+//    public List<ProductDTO> findProcuctsByCompany(Company company);
+
 }

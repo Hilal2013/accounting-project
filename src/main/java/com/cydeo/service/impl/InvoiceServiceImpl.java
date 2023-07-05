@@ -203,6 +203,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceDTO;
 
     }
+    @Override
+    public List<InvoiceDTO> listAllInvoiceForDashBoard() {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+
+        return invoiceRepository.findTop3DistinctByCompanyAndInvoiceStatusAndIsDeletedOrderByDateDesc(company,InvoiceStatus.APPROVED,false).stream()
+                .map(invoice -> calculateTotal(invoice.getId()))
+                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO()))
+                .collect(Collectors.toList());
+
+    }
+
 
 
 }
