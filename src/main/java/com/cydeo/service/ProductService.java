@@ -12,6 +12,7 @@ public interface ProductService  {
     public ProductDTO findById(Long id);
     public void delete(Long id);
     public ProductDTO update(Long id, ProductDTO dto);
+    public boolean productExists(ProductDTO productDTO);
 
     boolean checkInventory(InvoiceProductDTO invoiceProductDTO);
 

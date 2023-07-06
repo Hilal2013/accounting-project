@@ -13,6 +13,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    List<Product> findAllByIsDeletedOrderByCategoryAscNameAsc(boolean logic);
 
     List<Product> findAllByCategory_Company_IdOrderByCategoryAscNameAsc(Long id);
-
-
 }
