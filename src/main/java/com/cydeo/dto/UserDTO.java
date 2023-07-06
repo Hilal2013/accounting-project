@@ -29,7 +29,10 @@ public class UserDTO {
     @Size(max = 50, min = 2)
     private String lastname;
 
-    @Pattern(regexp = "^\\d{10}$")
+    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
+            + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
+            + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$",
+            message = "Phone Number is required field and may be in any valid phone number format.")
     private String phone;
     @NotNull
     private RoleDTO role;
