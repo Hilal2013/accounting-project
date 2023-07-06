@@ -39,7 +39,7 @@ public class ProductController {
     public String insertProduct(@Valid @ModelAttribute("newProduct") ProductDTO product, BindingResult bindingResult, Model model){
 
         if(productService.productExists(product)){
-            bindingResult.rejectValue("Name", "","Name of Product already exists.");
+            bindingResult.rejectValue("name", "","Name of Product already exists.");
         }
         if(bindingResult.hasErrors()){
 

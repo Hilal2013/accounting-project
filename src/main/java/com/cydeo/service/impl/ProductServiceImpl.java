@@ -6,9 +6,7 @@ import com.cydeo.dto.ProductDTO;
 import com.cydeo.entity.Product;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.mapper.ProductMapper;
-import com.cydeo.repository.CategoryRepository;
 import com.cydeo.repository.ProductRepository;
-import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.ProductService;
 import org.springframework.stereotype.Component;
@@ -93,6 +91,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean productExists(ProductDTO productDTO) {
+        Product product = productRepository.findByName(productDTO.getName());
+        if(product == null){
+            return false;
+        }
+        return product.getName().equals(productDTO.getName());
+    }
+
+
     @Override
     public boolean checkInventory(InvoiceProductDTO invoiceProductDTO) {
         if (invoiceProductDTO.getProduct() == null) {
@@ -116,7 +122,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.convertToDto(product);
     }
 
-//    /**
+    //    /**
 //     *
 //     * @param company
 //     * @return
@@ -126,12 +132,4 @@ public class ProductServiceImpl implements ProductService {
 //        List<Product> product = productRepository.findAllByCompany(company);
 //        return product.stream().map(product1 -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
 //    }
-
-
-        Product product = productRepository.findByName(productDTO.getName());
-        if(product == null){
-            return false;
-        }
-        return product.getName().equals(productDTO.getName());
-    }
 }
