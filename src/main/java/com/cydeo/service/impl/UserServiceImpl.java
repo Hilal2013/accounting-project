@@ -6,9 +6,9 @@ import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +18,12 @@ public class UserServiceImpl implements UserService {
     private final MapperUtil mapperUtil;
     private final UserRepository userRepository;
 
-    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(MapperUtil mapperUtil, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.mapperUtil = mapperUtil;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -45,7 +48,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(UserDTO user) {
-        userRepository.save(mapperUtil.convert(user,new User()));
+      User user2 =  mapperUtil.convert(user,new User());
+      user2.setEnabled(true);
+      user2.setPassword(passwordEncoder.encode(user2.getPassword()));
+      userRepository.save(user2);
     }
 
     @Override

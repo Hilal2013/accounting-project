@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.ProductDTO;
 import com.cydeo.entity.Product;
@@ -26,7 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     public ProductServiceImpl(ProductRepository productRepository, MapperUtil mapperUtil, ProductMapper productMapper,
-                              CategoryRepository categoryRepository, CategoryService categoryService, CompanyService companyService) {
+                              CompanyService companyService) {
         this.productRepository = productRepository;
         this.mapperUtil = mapperUtil;
         this.productMapper = productMapper;
@@ -92,6 +93,40 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean productExists(ProductDTO productDTO) {
+    @Override
+    public boolean checkInventory(InvoiceProductDTO invoiceProductDTO) {
+        if (invoiceProductDTO.getProduct() == null) {
+            return false;
+        }
+        Product product = productRepository.findByName(invoiceProductDTO.getProduct().getName());
+        return product.getQuantityInStock() < invoiceProductDTO.getQuantity();
+    }
+
+    @Override
+    public ProductDTO increaseProductInventory(Long id, Integer amount) {
+        Product product = productRepository.findById(id).orElseThrow();
+        product.setQuantityInStock(product.getQuantityInStock() + amount);
+        return productMapper.convertToDto(product);
+    }
+
+    @Override
+    public ProductDTO decreaseProductInventory(Long id, Integer amount) {
+        Product product = productRepository.findById(id).orElseThrow();
+        product.setQuantityInStock(product.getQuantityInStock() - amount);
+        return productMapper.convertToDto(product);
+    }
+
+//    /**
+//     *
+//     * @param company
+//     * @return
+//     */
+//    @Override
+//    public List<ProductDTO> findProcuctsByCompany(Company company) {
+//        List<Product> product = productRepository.findAllByCompany(company);
+//        return product.stream().map(product1 -> mapperUtil.convert(product, new ProductDTO())).collect(Collectors.toList());
+//    }
+
 
         Product product = productRepository.findByName(productDTO.getName());
         if(product == null){

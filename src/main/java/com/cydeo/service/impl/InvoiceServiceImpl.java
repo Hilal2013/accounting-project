@@ -5,6 +5,7 @@ import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.Company;
 import com.cydeo.entity.Invoice;
+import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
 import com.cydeo.mapper.MapperUtil;
@@ -13,6 +14,7 @@ import com.cydeo.repository.InvoiceRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -28,22 +30,39 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final CompanyService companyService;
     private final InvoiceProductService invoiceProductService;
     private final InvoiceProductRepository invoiceProductRepository;
+    private final ProductService productService;
 
 
     private final MapperUtil mapperUtil;
 
-    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, MapperUtil mapperUtil) {
+    public InvoiceServiceImpl(InvoiceRepository invoiceRepository, CompanyService companyService, @Lazy InvoiceProductService invoiceProductService, InvoiceProductRepository invoiceProductRepository, ProductService productService, MapperUtil mapperUtil) {
         this.invoiceRepository = invoiceRepository;
         this.companyService = companyService;
         this.invoiceProductService = invoiceProductService;
         this.invoiceProductRepository = invoiceProductRepository;
+        this.productService = productService;
         this.mapperUtil = mapperUtil;
     }
 
     @Override
     public InvoiceDTO findById(Long id) {
-
-        return mapperUtil.convert(invoiceRepository.findByIdAndIsDeleted(id,false), new InvoiceDTO());
+        InvoiceDTO invoiceDTO = mapperUtil.convert(invoiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invoice couldn't find.")), new InvoiceDTO());
+        List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+        BigDecimal subtotal = BigDecimal.ZERO;
+        BigDecimal tax = BigDecimal.ZERO;
+        BigDecimal grandTotal = BigDecimal.ZERO;
+        for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+            BigDecimal price = invoiceProductDTO.getPrice()
+                    .multiply(BigDecimal.valueOf(invoiceProductDTO.getQuantity()));
+            subtotal = subtotal.add(price);
+            tax = tax.add(price.multiply(BigDecimal.valueOf((invoiceProductDTO.getTax() * 0.01))));
+        }
+        grandTotal = subtotal.add(tax);
+        invoiceDTO.setPrice(subtotal);
+        invoiceDTO.setTax(tax);
+        invoiceDTO.setTotal(grandTotal);
+        return invoiceDTO;
     }
 
 
@@ -108,6 +127,21 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public InvoiceDTO approve(Long id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow();
+        if (invoice.getInvoiceType().getValue().equals(InvoiceType.PURCHASE.getValue())) {
+            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+            for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+                Long productId = invoiceProductDTO.getProduct().getId();
+                Integer amount = invoiceProductDTO.getQuantity();
+                productService.increaseProductInventory(productId, amount);
+            }
+        } else if (invoice.getInvoiceType().getValue().equals(InvoiceType.SALES.getValue())) {
+            List<InvoiceProductDTO> invoiceProductDTOList = invoiceProductService.listAllInvoiceProduct(id);
+            for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
+                Long productId = invoiceProductDTO.getProduct().getId();
+                Integer amount = invoiceProductDTO.getQuantity();
+                productService.decreaseProductInventory(productId, amount);
+            }
+        }
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
         invoiceRepository.save(invoice);
         return mapperUtil.convert(invoice, new InvoiceDTO());
@@ -169,6 +203,19 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceDTO;
 
     }
+    @Override
+    public List<InvoiceDTO> listAllInvoiceForDashBoard() {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+
+        return invoiceRepository.findTop3DistinctByCompanyAndInvoiceStatusAndIsDeletedOrderByDateDesc(company,InvoiceStatus.APPROVED,false).stream()
+                .map(invoice -> calculateTotal(invoice.getId()))
+                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO()))
+                .collect(Collectors.toList());
+
+    }
+
+
 
 }
 
