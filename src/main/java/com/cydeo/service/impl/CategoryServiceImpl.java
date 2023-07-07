@@ -76,7 +76,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
 
-
     @Override
     public List<CategoryDTO> listAllCategoriesByCompany(){
         List<Category> categoryList = categoryRepository
