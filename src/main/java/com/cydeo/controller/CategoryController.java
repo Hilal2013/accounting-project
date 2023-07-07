@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public String displayAllCategory(Model model){
-        model.addAttribute("categories", categoryService.listAllCategories());
+        model.addAttribute("categories", categoryService.listAllCategoriesByCompany());
         return "/category/category-list";
     }
 
@@ -98,4 +98,12 @@ public class CategoryController {
     }
 
 /// was working ,but not function
+ */
+
+/*
+@GetMapping("/list") // 4 July 2023
+    public String displayAllCategory(Model model){
+        model.addAttribute("categories", categoryService.listAllCategories());
+        return "/category/category-list";
+    }
  */
