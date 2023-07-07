@@ -18,5 +18,5 @@ public interface CompanyService {
 
     boolean existByTitle(CompanyDTO companyDTO);
     boolean existByTitleForUpdate(CompanyDTO companyDTO);
-
+ List<String> retrieveCountryList();
 }

@@ -30,7 +30,9 @@ public class CompanyController {
     public String createCompany(Model model){
         model.addAttribute("newCompany",new CompanyDTO());
         //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+      //  model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
+
         return"company/company-create";
     }
 
@@ -56,7 +58,9 @@ public class CompanyController {
     public String editCompanyForm(@PathVariable("id") Long id,Model model) {
         model.addAttribute("company",companyService.findById(id));
         //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+       // model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
+
         return "company/company-update";
     }
 
@@ -69,7 +73,8 @@ public class CompanyController {
         }
 
         //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+       // model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
 
         if (bindingResult.hasErrors()) {
             return "/company/company-update";

@@ -1,6 +1,8 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.client.CountryClient;
 import com.cydeo.dto.CompanyDTO;
+import com.cydeo.dto.CountryDTO;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.mapper.MapperUtil;
@@ -9,6 +11,7 @@ import com.cydeo.service.CompanyService;
 import com.cydeo.service.SecurityService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,11 +21,15 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
+    private final CountryClient countryClient;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, SecurityService securityService) {
+    private String authToken = "J0GEhp8LE6_dp7O5nPwmrwgMi7C0XQOoVnNdD3MEsdBcB1MIV_c9vnxcfjo4PJcD1os";
+
+    public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, SecurityService securityService, CountryClient countryClient) {
         this.companyRepository = companyRepository;
         this.mapperUtil = mapperUtil;
         this.securityService = securityService;
+        this.countryClient = countryClient;
     }
 
     @Override
@@ -44,14 +51,14 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<CompanyDTO> getListOfCompanies() {
 
-        if (securityService.getLoggedInUser().getRole().getDescription().equals("Root User")){
+        if (securityService.getLoggedInUser().getRole().getDescription().equals("Root User")) {
 
             return companyRepository.getCompaniesSortedByStatusAndTitle()
                     .stream()
                     .filter(company -> company.getId() != 1)
                     .map(company -> mapperUtil.convert(company, new CompanyDTO()))
                     .collect(Collectors.toList());
-        }else{
+        } else {
             return companyRepository.findAllByTitle(getCompanyDTOByLoggedInUser().getTitle())
                     .stream()
                     .map(company -> mapperUtil.convert(company, new CompanyDTO()))
@@ -67,12 +74,13 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.save(mapperUtil.convert(companyDTO, new Company()));
         //New created company's company status will be "Passive" as default
         company.setCompanyStatus(CompanyStatus.PASSIVE); // Set
+        retrieveCountryList();
         companyRepository.save(company);
         return mapperUtil.convert(company, new CompanyDTO());
     }
 
     @Override
-    public CompanyDTO updateCompany(Long id,CompanyDTO companyDTO) {
+    public CompanyDTO updateCompany(Long id, CompanyDTO companyDTO) {
         //find Company entity
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company couldn't find."));
@@ -81,7 +89,7 @@ public class CompanyServiceImpl implements CompanyService {
         convertedCompany.setId(company.getId());
         convertedCompany.setCompanyStatus(company.getCompanyStatus());
         companyRepository.save(convertedCompany);
-        return mapperUtil.convert(convertedCompany,new CompanyDTO());
+        return mapperUtil.convert(convertedCompany, new CompanyDTO());
 
     }
 
@@ -93,21 +101,28 @@ public class CompanyServiceImpl implements CompanyService {
         company.setCompanyStatus(companyStatus);
         companyRepository.save(company);
     }
+
     @Override
     public boolean existByTitle(CompanyDTO companyDTO) {
-        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
+        Company company = companyRepository.findByTitle(companyDTO.getTitle());
         if (company == null) return false;
         return company.getTitle().equals(companyDTO.getTitle());
     }
+
     @Override
     public boolean existByTitleForUpdate(CompanyDTO companyDTO) {
-        Company company =  companyRepository.findByTitle(companyDTO.getTitle());
+        Company company = companyRepository.findByTitle(companyDTO.getTitle());
         if (company == null) return false;
         return !company.getId().equals(companyDTO.getId());
     }
+
+    @Override
+    public List<String> retrieveCountryList() {
+        return countryClient.getCountryList(authToken).stream()
+                .map(countryDTO -> countryDTO.getCountryName())
+                .sorted(Comparator.comparing(String::toUpperCase))
+                .collect(Collectors.toList());
+    }
+
+
 }
-//  CompanyStatus loggedInUserCompanyStatus = getCompanyDTOByLoggedInUser().getCompanyStatus();
-//            List<Company> companiesByStatus= companyRepository.findAllByCompanyStatusIs(loggedInUserCompanyStatus);
-//            return companiesByStatus.stream()
-//                    .map(company -> mapperUtil.convert(company, new CompanyDTO()))
-//              .collect(Collectors.toList());
