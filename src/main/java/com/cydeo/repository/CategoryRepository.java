@@ -11,5 +11,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> getAllCategoriesOrderByCompanyAsc(Long id);
 
     List<Category> listAllCategoriesByCompany();
+
 }
 
