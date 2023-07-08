@@ -2,7 +2,6 @@ package com.cydeo.service.impl;
 
 import com.cydeo.client.CountryClient;
 import com.cydeo.dto.CompanyDTO;
-import com.cydeo.dto.CountryDTO;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.mapper.MapperUtil;
@@ -22,8 +21,6 @@ public class CompanyServiceImpl implements CompanyService {
     private final MapperUtil mapperUtil;
     private final SecurityService securityService;
     private final CountryClient countryClient;
-
-    private String authToken = "J0GEhp8LE6_dp7O5nPwmrwgMi7C0XQOoVnNdD3MEsdBcB1MIV_c9vnxcfjo4PJcD1os";
 
     public CompanyServiceImpl(CompanyRepository companyRepository, MapperUtil mapperUtil, SecurityService securityService, CountryClient countryClient) {
         this.companyRepository = companyRepository;
@@ -118,8 +115,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<String> retrieveCountryList() {
-        return countryClient.getCountryList(authToken).stream()
-                .map(countryDTO -> countryDTO.getCountryName())
+        return countryClient.getCountryList().stream()
+                .map(countryDTO -> countryDTO.getName().getCommon())
                 .sorted(Comparator.comparing(String::toUpperCase))
                 .collect(Collectors.toList());
     }
