@@ -8,6 +8,7 @@ import com.cydeo.entity.Invoice;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceStatus;
 import com.cydeo.enums.InvoiceType;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.repository.InvoiceRepository;
@@ -85,8 +86,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Optional<Invoice> invoice2 = invoiceRepository.findById(invoice.getId());
 
         Invoice updatedInvoice = mapperUtil.convert(invoice, new Invoice());
-        updatedInvoice.setClientVendor(invoice2.get().getClientVendor());
-
+        updatedInvoice.setClientVendor(invoice2.orElseThrow(()->new InvoiceNotFoundException("Invoice can not found!.")).getClientVendor());
         invoiceRepository.save(updatedInvoice);
         return mapperUtil.convert(updatedInvoice, new InvoiceDTO());
     }
@@ -104,18 +104,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
-    public CompanyDTO findCurrentCompany(){
-
-        return companyService.getCompanyDTOByLoggedInUser();
-
-    }
-
     @Override
     public InvoiceDTO delete(Long invoiceId) {
         Invoice invoice = invoiceRepository.findByIdAndIsDeleted(invoiceId, false);
         if (invoice.getInvoiceStatus().equals(InvoiceStatus.AWAITING_APPROVAL)) {
             invoice.setIsDeleted(true);
-
         }
         invoiceProductRepository.findAllByInvoiceId(invoice.getId()).stream()
                     .map(invoiceProduct -> invoiceProductService.delete(invoiceProduct.getId())).collect(Collectors.toList());
@@ -197,9 +190,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceDTO.setPrice(totalPrice);
         invoiceDTO.setTax(tax);
         invoiceDTO.setTotal(totalWithTax.setScale(2));
-
-
-
         return invoiceDTO;
 
     }
