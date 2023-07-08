@@ -17,10 +17,10 @@ public class PerformanceAspect {
 
     @Around("executionTimePC()")
     public Object aroundAnyExecutionTimeAdvice(ProceedingJoinPoint proceedingJoinPoint) {
-
+        String methodName = proceedingJoinPoint.getSignature().getName();
         long beforeTime = System.currentTimeMillis();
         Object result = null;
-        log.info("Execution starts:");
+        log.info("Execution starts:",methodName);
 
         try {
             result = proceedingJoinPoint.proceed();
@@ -31,7 +31,7 @@ public class PerformanceAspect {
         long afterTime = System.currentTimeMillis();
 
         log.info("Time taken to execute: {} ms - Method: {}"
-                , (afterTime - beforeTime), proceedingJoinPoint.getSignature().toShortString());
+                , (afterTime - beforeTime),methodName);
 
         return result;
 
