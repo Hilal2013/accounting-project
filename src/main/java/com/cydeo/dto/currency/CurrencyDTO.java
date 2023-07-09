@@ -8,35 +8,35 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "meta",
-    "data"
+    "date",
+    "usd"
 })
 @Generated("jsonschema2pojo")
 public class CurrencyDTO {
 
-    @JsonProperty("meta")
-    private Meta meta;
-    @JsonProperty("data")
-    private Data data;
+    @JsonProperty("date")
+    private String date;
+    @JsonProperty("usd")
+    private Usd usd;
 
-    @JsonProperty("meta")
-    public Meta getMeta() {
-        return meta;
+    @JsonProperty("date")
+    public String getDate() {
+        return date;
     }
 
-    @JsonProperty("meta")
-    public void setMeta(Meta meta) {
-        this.meta = meta;
+    @JsonProperty("date")
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    @JsonProperty("data")
-    public Data getData() {
-        return data;
+    @JsonProperty("usd")
+    public Usd getUsd() {
+        return usd;
     }
 
-    @JsonProperty("data")
-    public void setData(Data data) {
-        this.data = data;
+    @JsonProperty("usd")
+    public void setUsd(Usd usd) {
+        this.usd = usd;
     }
 
 }

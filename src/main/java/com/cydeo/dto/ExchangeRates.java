@@ -1,10 +1,13 @@
-package com.cydeo.dto.currency;
+package com.cydeo.dto;
 
-import com.cydeo.client.CurrencyClient;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Map;
+
 @Getter
 @Setter
 public class ExchangeRates {
@@ -14,5 +17,6 @@ public class ExchangeRates {
     private BigDecimal canadianDollar;
     private BigDecimal japaneseYen;
     private BigDecimal indianRupee;
+
 
 }

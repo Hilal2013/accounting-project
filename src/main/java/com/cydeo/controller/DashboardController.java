@@ -1,7 +1,8 @@
 package com.cydeo.controller;
 
 import com.cydeo.client.CurrencyClient;
-import com.cydeo.dto.currency.ExchangeRates;
+import com.cydeo.dto.ExchangeRates;
+import com.cydeo.dto.currency.Usd;
 import com.cydeo.service.DashboardService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -18,13 +19,11 @@ import java.util.Map;
 public class DashboardController {
     private final DashboardService dashboardService;
     private final InvoiceService invoiceService;
-    private final CurrencyClient currencyClient;
 
 
     public DashboardController(DashboardService dashboardService, InvoiceService invoiceService, CurrencyClient currencyClient) {
         this.dashboardService = dashboardService;
         this.invoiceService = invoiceService;
-        this.currencyClient = currencyClient;
     }
 
     @GetMapping
@@ -36,7 +35,8 @@ public class DashboardController {
         summaryNumbers.put("profitLoss",dashboardService.sumOfTotalProfit_Loss());
         model.addAttribute("summaryNumbers",summaryNumbers);
         model.addAttribute("invoices",invoiceService.listAllInvoiceForDashBoard());
-        model.addAttribute("exchangeRates",dashboardService.getExchangeRates());
+
+        model.addAttribute("exchangeRates",dashboardService.getRates());
 
         return "/dashboard";
     }
