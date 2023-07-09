@@ -5,6 +5,7 @@ import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.CompanyService;
@@ -81,7 +82,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public InvoiceProductDTO delete(Long invoiceProductId) {
         Optional<InvoiceProduct> invoiceProduct=invoiceProductRepository.findById(invoiceProductId);
-        invoiceProduct.orElseThrow().setIsDeleted(true);
+        invoiceProduct.orElseThrow(()-> new InvoiceNotFoundException("Invoice can not found")).setIsDeleted(true);
         invoiceProductRepository.save(invoiceProduct.orElseThrow());
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;

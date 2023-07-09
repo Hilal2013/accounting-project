@@ -29,6 +29,7 @@ public class DashboardController {
 
     @GetMapping
     public String getDashboard(Model model) {
+
         Map<String, BigDecimal> summaryNumbers = new HashMap<>();
         summaryNumbers.put("totalCost", dashboardService.sumOfTotalCost());
         summaryNumbers.put("totalSales",dashboardService.sumOfTotalSales());

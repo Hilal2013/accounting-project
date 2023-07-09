@@ -10,6 +10,8 @@ import com.cydeo.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -26,6 +28,7 @@ public class DashboardServiceImpl implements DashboardService {
         this.invoiceService = invoiceService;
         this.currencyClient = currencyClient;
     }
+
 
     @Override
     public BigDecimal sumOfTotalCost() {
