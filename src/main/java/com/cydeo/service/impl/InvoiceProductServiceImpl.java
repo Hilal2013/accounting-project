@@ -4,11 +4,14 @@ import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.entity.Product;
+import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
+import com.cydeo.service.ProductService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +45,9 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     private InvoiceProductDTO calculateTotalInvoiceProduct(Long invoiceProductId){
         InvoiceProductDTO invoiceProductDTO=findById(invoiceProductId);
         BigDecimal total=BigDecimal.ZERO;
+        if (invoiceProductDTO.getQuantity() == null || invoiceProductDTO.getPrice() == null || invoiceProductDTO.getTax()==null) {
+            throw new IllegalArgumentException("Quantity or price is null");
+        }
         List<InvoiceProduct> list =invoiceProductRepository.findAllByIdAndIsDeleted(invoiceProductDTO.getId(),false);
         for (InvoiceProduct each : list) {
             total=total.add(each.getPrice().multiply(BigDecimal.valueOf(each.getQuantity())));//15
@@ -76,7 +82,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public InvoiceProductDTO delete(Long invoiceProductId) {
         Optional<InvoiceProduct> invoiceProduct=invoiceProductRepository.findById(invoiceProductId);
-        invoiceProduct.orElseThrow().setIsDeleted(true);
+        invoiceProduct.orElseThrow(()-> new InvoiceNotFoundException("Invoice can not found")).setIsDeleted(true);
         invoiceProductRepository.save(invoiceProduct.orElseThrow());
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;

@@ -23,5 +23,5 @@ public interface InvoiceService {
     InvoiceDTO createNewPurchasesInvoice();
     String findInvoiceId();
 
-
+    List<InvoiceDTO> listAllInvoiceForDashBoard();
 }

@@ -1,5 +1,6 @@
 package com.cydeo.controller;
 
+import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
@@ -8,7 +9,10 @@ import com.cydeo.enums.InvoiceType;
 import com.cydeo.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/purchaseInvoices")
@@ -41,7 +45,11 @@ public class PurchasesInvoiceController {
     }
 
     @PostMapping("/create")
-    public String savePurchaseInvoice(@ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice) {
+    public String savePurchaseInvoice(@Valid @ModelAttribute("newPurchaseInvoice") InvoiceDTO invoice,BindingResult bindingResult, Model model){
+        if (bindingResult.hasErrors()){
+            model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
+            return "/invoice/purchase-invoice-create";
+        }
         invoiceService.save(invoice, InvoiceType.PURCHASE);
         String id = invoiceService.findInvoiceId();
         return "redirect:/purchaseInvoices/update/" + id;
@@ -66,7 +74,14 @@ public class PurchasesInvoiceController {
 
 
     @PostMapping("/addInvoiceProduct/{invoiceId}")
-    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id, @ModelAttribute InvoiceProductDTO invoiceProductDTO, Model model) {
+    public String addInvoiceProduct1(@PathVariable("invoiceId") Long id,@Valid @ModelAttribute("newInvoiceProduct") InvoiceProductDTO invoiceProductDTO,BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()){
+            model.addAttribute("invoice", invoiceService.findById(id));
+            model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
+            model.addAttribute("products", productService.listAllProducts());
+            return "/invoice/purchase-invoice-update";
+        }
         invoiceProductService.save(invoiceProductDTO, id);
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));
         return "redirect:/purchaseInvoices/update/" + id;

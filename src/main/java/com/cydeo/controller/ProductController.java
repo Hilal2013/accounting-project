@@ -17,7 +17,6 @@ import java.util.Arrays;
 public class ProductController {
 
     private final ProductService productService;
-
     private final CategoryService categoryService;
 
 
@@ -37,14 +36,21 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String insertProduct(@ModelAttribute("product") ProductDTO product, Model model, BindingResult bindingResult){
+    public String insertProduct(@Valid @ModelAttribute("newProduct") ProductDTO product, BindingResult bindingResult, Model model){
 
+        if(productService.productExists(product)){
+            bindingResult.rejectValue("name", "","Name of Product already exists.");
+        }
         if(bindingResult.hasErrors()){
+
+            model.addAttribute("categories", categoryService.listAllCategories());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+
             return "/product/product-create";
         }
         productService.save(product);
 
-        return "redirect:/products/create";
+        return "redirect:/products/list";
     }
 
     @GetMapping("/list")
@@ -67,13 +73,13 @@ public class ProductController {
     }
 
     @PostMapping("/update/{productId}")
-    public String updateProduct(@PathVariable("productId") Long productId,
-                                @Valid @ModelAttribute("product") ProductDTO product,
-                                Model model, BindingResult bindingResult)
-    {
+    public String updateProduct(@Valid @ModelAttribute("product") ProductDTO product, BindingResult bindingResult,
+                                @PathVariable("productId") Long productId, Model model) {
 
         if(bindingResult.hasErrors()){
-            return "/product/product-list";
+            model.addAttribute("categories", categoryService.listAllCategories());
+            model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
+            return "/product/product-update";
         }
         productService.update(productId,product);
 
