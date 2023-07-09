@@ -1,6 +1,8 @@
 package com.cydeo.controller;
 
-import com.cydeo.entity.Currency;
+import com.cydeo.client.CurrencyClient;
+import com.cydeo.dto.ExchangeRates;
+import com.cydeo.dto.currency.Usd;
 import com.cydeo.service.DashboardService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,8 @@ public class DashboardController {
     private final DashboardService dashboardService;
     private final InvoiceService invoiceService;
 
-    public DashboardController(DashboardService dashboardService, InvoiceService invoiceService) {
+
+    public DashboardController(DashboardService dashboardService, InvoiceService invoiceService, CurrencyClient currencyClient) {
         this.dashboardService = dashboardService;
         this.invoiceService = invoiceService;
     }
@@ -32,7 +35,9 @@ public class DashboardController {
         summaryNumbers.put("profitLoss",dashboardService.sumOfTotalProfit_Loss());
         model.addAttribute("summaryNumbers",summaryNumbers);
         model.addAttribute("invoices",invoiceService.listAllInvoiceForDashBoard());
-        model.addAttribute("exchangeRates",new Currency());
+
+        model.addAttribute("exchangeRates",dashboardService.getRates());
+
         return "/dashboard";
     }
 }
