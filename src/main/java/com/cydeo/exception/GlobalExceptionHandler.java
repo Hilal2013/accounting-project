@@ -1,37 +1,42 @@
 package com.cydeo.exception;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.cydeo.annotation.AccountingExceptionMessage;
+import com.cydeo.dto.DefaultExceptionMessageDto;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.HandlerMethod;
+import java.lang.reflect.Method;
+import java.util.Optional;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-
-    @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
-    public String handleGenericException(Exception exception,Model model) {
-        String message = exception.getMessage();
-        if (message == null || message.isEmpty()) {
-
-            model.addAttribute("message", "Something went wrong!");
-
+    @ExceptionHandler({Throwable.class})
+    public String genericException(Throwable exception, HandlerMethod handlerMethod, Model model) {
+        exception.printStackTrace();
+        String message = "Something went wrong!";
+        Optional<DefaultExceptionMessageDto> defaultMessage = getMessageFromAnnotation(handlerMethod.getMethod());
+        if (defaultMessage.isPresent()) {
+            message = defaultMessage.get().getMessage();
+        } else if (exception.getMessage() != null) {
+            message = exception.getMessage();
         }
-        return "error";
-    }
-    @ExceptionHandler(InvoiceNotFoundException.class)
-    public String handleInvoiceNotFoundException(InvoiceNotFoundException ex, Model model) {
-        model.addAttribute("message", ex.getMessage());
+        model.addAttribute("message", message);
         return "error";
     }
 
-
-
-
-
+    private Optional<DefaultExceptionMessageDto> getMessageFromAnnotation(Method method) {
+        AccountingExceptionMessage defaultExceptionMessage = method
+                .getAnnotation(AccountingExceptionMessage.class);
+        if (defaultExceptionMessage != null && !defaultExceptionMessage.defaultMessage().equals("Something went wrong!")) {
+            DefaultExceptionMessageDto defaultExceptionMessageDto = DefaultExceptionMessageDto
+                    .builder()
+                    .message(defaultExceptionMessage.defaultMessage())
+                    .build();
+            return Optional.of(defaultExceptionMessageDto);
+        }
+        return Optional.empty();
+    }
 }
+
 
