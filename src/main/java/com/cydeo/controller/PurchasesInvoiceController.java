@@ -79,7 +79,7 @@ public class PurchasesInvoiceController {
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));
         if (bindingResult.hasErrors()){
             model.addAttribute("invoice", invoiceService.findById(id));
-            model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
+           // model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
             model.addAttribute("products", productService.listAllProducts());
             return "/invoice/purchase-invoice-update";
         }
