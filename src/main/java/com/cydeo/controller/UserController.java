@@ -99,9 +99,9 @@ public class UserController {
     @PostMapping("/update/{id}")
     public String updateUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model) {
 
-//        if (userService.existByUsernameForUpdate(user)) {
-//            bindingResult.rejectValue("username", "", "This email already exists.");
-//        }
+        if (userService.existByUsernameForUpdate(user)) {
+            bindingResult.rejectValue("username", "", "This email already exists.");
+        }
 
 
         if (bindingResult.hasErrors()) {
