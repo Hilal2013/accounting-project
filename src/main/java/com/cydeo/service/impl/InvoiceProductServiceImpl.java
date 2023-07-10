@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         InvoiceProductDTO invoiceProductDTO=findById(invoiceProductId);
         BigDecimal total=BigDecimal.ZERO;
         if (invoiceProductDTO.getQuantity() == null || invoiceProductDTO.getPrice() == null || invoiceProductDTO.getTax()==null) {
-            throw new IllegalArgumentException("Quantity or price is null");
+            throw new InvoiceNotFoundException("Quantity or price is null");
         }
         List<InvoiceProduct> list =invoiceProductRepository.findAllByIdAndIsDeleted(invoiceProductDTO.getId(),false);
         for (InvoiceProduct each : list) {
