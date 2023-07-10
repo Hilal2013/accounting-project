@@ -14,11 +14,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserByIdIs(Long id);
 
-    List<User> findAllByIsDeletedOrderByFirstnameDesc(Boolean deleted);
 
 
-    @Query("select s from User s order by s.company.title asc, s.role.description asc ")
-    List<User> getUsersSortedByCompanyAndRole();
+    @Query("select s from User s where s.isDeleted=false order by s.company.title asc , s.role.description asc")
+    List<User> getUsersSortedByCompanyAndRoleIAndIsDeletedFalse();
+
 
 
     List<User> findByRoleDescriptionIgnoreCaseAndIsDeleted(String description, Boolean deleted);

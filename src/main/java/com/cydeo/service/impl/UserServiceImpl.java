@@ -2,6 +2,7 @@ package com.cydeo.service.impl;
 
 
 import com.cydeo.dto.UserDTO;
+import com.cydeo.entity.Company;
 import com.cydeo.entity.User;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
@@ -45,18 +46,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> listAllUsers() {
-        List<User> userList = userRepository.findAllByIsDeletedOrderByFirstnameDesc(false);
+        List<User> userList = userRepository.getUsersSortedByCompanyAndRoleIAndIsDeletedFalse();
 
 
 
 
-        if(!securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("root user")){
+        if(securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("admin")) {
             return userList.stream()
-
-                    .filter(user -> !user.getRole().getDescription().equalsIgnoreCase("root user"))
+                    .filter(user -> user.getCompany().getId().equals(securityService.getLoggedInUser().getCompany().getId()))
                     .map(user -> mapperUtil.convert(user, new UserDTO()))
                     .collect(Collectors.toList());
-        }else {
+        } else if (securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("root user")) {
+            return userList.stream()
+
+                    .filter(user -> user.getRole().getDescription().equalsIgnoreCase("admin"))
+                    .map(user -> mapperUtil.convert(user, new UserDTO()))
+                    .collect(Collectors.toList());
+        } else {
             return userList.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
         }
     }
