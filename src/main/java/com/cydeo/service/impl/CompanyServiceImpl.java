@@ -4,6 +4,7 @@ import com.cydeo.client.CountryClient;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.CompanyStatus;
+import com.cydeo.exception.CompanyNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CompanyRepository;
 import com.cydeo.service.CompanyService;
@@ -34,7 +35,7 @@ public class CompanyServiceImpl implements CompanyService {
         //find UserDTO who logged in and find company through id //convert Company entity to CompanyDTO
         Company company = companyRepository.findById
                         (securityService.getLoggedInUser().getCompany().getId())
-                .orElseThrow(() -> new RuntimeException("Company couldn't be found."));
+                .orElseThrow(() -> new CompanyNotFoundException("Company couldn't be found."));
         return mapperUtil.convert(company, new CompanyDTO());
 
     }
@@ -42,7 +43,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDTO findById(Long id) {
         return mapperUtil.convert(companyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Company couldn't find.")), new CompanyDTO());
+                .orElseThrow(() -> new CompanyNotFoundException("Company couldn't find.")), new CompanyDTO());
     }
 
     @Override
@@ -80,7 +81,7 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyDTO updateCompany(Long id, CompanyDTO companyDTO) {
         //find Company entity
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Company couldn't find."));
+                .orElseThrow(() -> new CompanyNotFoundException("Company couldn't find."));
         //convert coming CompanyDTO to Company
         Company convertedCompany = mapperUtil.convert(companyDTO, new Company());
         convertedCompany.setId(company.getId());
@@ -93,7 +94,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void changeCompanyStatus(Long id, CompanyStatus companyStatus) {
         Company company = companyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Company couldn't find."));
+                .orElseThrow(() -> new CompanyNotFoundException("Company couldn't find."));
 
         company.setCompanyStatus(companyStatus);
         companyRepository.save(company);
