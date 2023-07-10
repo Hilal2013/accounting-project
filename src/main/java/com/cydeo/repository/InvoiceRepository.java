@@ -23,5 +23,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
     List<Invoice> retrieveInvoiceByTypeAndCompany(InvoiceType invoiceType, Company company);
 
     List<Invoice> findTop3DistinctByCompanyAndInvoiceStatusAndIsDeletedOrderByDateDesc(Company company, InvoiceStatus invoiceStatus, Boolean isDeleted);
+
 }
 

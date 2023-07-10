@@ -79,8 +79,7 @@ public class PurchasesInvoiceController {
         if (bindingResult.hasErrors()){
             model.addAttribute("invoice", invoiceService.findById(id));
             model.addAttribute("vendors", clientVendorService.listAllClientVendor(ClientVendorType.VENDOR));
-            model.addAttribute("products", productService.listAllProducts());
-            return "/invoice/purchase-invoice-update";
+            return "redirect:/purchaseInvoices/update/" + id;
         }
         invoiceProductService.save(invoiceProductDTO, id);
         model.addAttribute("invoiceProducts", invoiceProductService.listAllInvoiceProduct(id));

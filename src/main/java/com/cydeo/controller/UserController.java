@@ -116,7 +116,7 @@ public class UserController {
 
         userService.update(user);
 
-        return "redirect:/users/create";
+        return "redirect:/users/list";
 
     }
 
