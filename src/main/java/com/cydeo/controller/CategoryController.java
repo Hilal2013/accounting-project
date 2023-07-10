@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping("/list")
     public String displayAllCategory(Model model){
-        model.addAttribute("categories", categoryService.listAllCategoriesByCompany());
+        model.addAttribute("categories", categoryService.listAllCategories());
         return "/category/category-list";
     }
 
@@ -40,7 +40,6 @@ public class CategoryController {
         return "redirect:/categories/list";
     }
 
-
     @GetMapping("/update/{categoryId}")
     public String showPageEditCategory(@PathVariable("categoryId") Long categoryId, Model model) {
         model.addAttribute("category",categoryService.findById(categoryId));
@@ -48,7 +47,8 @@ public class CategoryController {
     }
 
     @PostMapping("/update/{categoryId}")
-    public String updateCategory(@PathVariable("categoryId") Long categoryId, @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+    public String updateCategory(@PathVariable("categoryId") Long categoryId,
+                                 @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
                                  BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
@@ -65,8 +65,6 @@ public class CategoryController {
 
         return "redirect:/categories/list";
     }
-
-
 
 }
 
