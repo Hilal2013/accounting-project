@@ -17,6 +17,6 @@ public interface CategoryService {
 
     void delete(Long categoryId);
 
-    List<CategoryDTO> listAllCategoriesByCompany();
+ //   List<CategoryDTO> listAllCategoriesByCompany();
 
 }
