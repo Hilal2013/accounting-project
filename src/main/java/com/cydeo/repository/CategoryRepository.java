@@ -7,10 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findAllByCompany_IdOrderByDescriptionAsc(Long id);
 
-    List<Category> findAllByCategory_Company_IdOrderByCategoryAscNameAsc(Long id);
-
-    List<Category> listAllCategoriesByCompany();
-
+//    List<Category> listAllCategoriesByCompany(Company company);
 }
 
