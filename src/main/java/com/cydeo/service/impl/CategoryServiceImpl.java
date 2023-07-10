@@ -79,7 +79,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDTO> listAllCategoriesByCompany(){
         List<Category> categoryList = categoryRepository
-                .getAllCategoriesOrderByCompanyAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+                .findAllByCategory_Company_IdOrderByCategoryAscNameAsc(companyService.getCompanyDTOByLoggedInUser().getId());
         return categoryList.stream()
                 .sorted(Comparator.comparing(Category::getDescription))
                 .map(category -> mapperUtil.convert(category, new CategoryDTO()))
