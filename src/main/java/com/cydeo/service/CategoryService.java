@@ -1,6 +1,7 @@
 package com.cydeo.service;
 
 import com.cydeo.dto.CategoryDTO;
+import com.cydeo.entity.Company;
 
 import java.util.List;
 
@@ -15,5 +16,7 @@ public interface CategoryService {
     CategoryDTO updateCategory(Long categoryId, CategoryDTO categoryDTO);
 
     void delete(Long categoryId);
+
+ //   List<CategoryDTO> listAllCategoriesByCompany();
 
 }

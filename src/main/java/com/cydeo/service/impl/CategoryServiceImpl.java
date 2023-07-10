@@ -2,11 +2,14 @@ package com.cydeo.service.impl;
 
 import com.cydeo.dto.CategoryDTO;
 import com.cydeo.entity.Category;
+import com.cydeo.entity.Company;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
+import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,21 +20,23 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final MapperUtil mapperUtil;
+    private final CompanyService companyService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil) {
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, MapperUtil mapperUtil, CompanyService companyService) {
         this.categoryRepository = categoryRepository;
         this.mapperUtil = mapperUtil;
+        this.companyService = companyService;
     }
 
     @Override
     public List<CategoryDTO> listAllCategories() {
 
-        List<Category> categoriesList = categoryRepository.findAll();
-        return categoriesList.stream().map(
-
-                category ->
-                        mapperUtil.convert(category, new CategoryDTO())).collect(Collectors.toList()
-        );
+        List<Category> categoriesList = categoryRepository
+                .findAllByCompany_IdOrderByDescriptionAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+        return categoriesList.stream()
+                .map(category -> mapperUtil.convert(category, new CategoryDTO()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -66,5 +71,25 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(categoryInDb);
     }
 
-
 }
+
+/*
+
+    @Override
+    public List<CategoryDTO> listAllCategoriesByCompany(Company company) {
+        return null;
+    }
+ //   private final CompanyRepository companyRepository; this.companyRepository = companyRepository; CompanyRepository companyRepository,
+
+
+    @Override
+    public List<CategoryDTO> listAllCategoriesByCompany(){
+        List<Category> categoryList = categoryRepository
+                .findAllByCategory_Company_IdOrderByCategoryAscNameAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+        return categoryList.stream()
+                .sorted(Comparator.comparing(Category::getDescription))
+                .map(category -> mapperUtil.convert(category, new CategoryDTO()))
+                .collect(Collectors.toList());
+    }
+
+ */
