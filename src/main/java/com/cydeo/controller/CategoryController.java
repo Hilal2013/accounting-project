@@ -35,7 +35,14 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public String createCategory(@ModelAttribute("newCategory")CategoryDTO categoryDTO, Model model){
+    public String createCategory(@Valid @ModelAttribute("newCategory")CategoryDTO categoryDTO, BindingResult bindingResult){
+        boolean categoryDescriptionNotUnique=categoryService.isCategoryDescriptionUnique(categoryDTO);
+        if (categoryDescriptionNotUnique){
+            bindingResult.rejectValue("description", " ", "This description is already exists.");
+        }
+        if (bindingResult.hasErrors()){
+            return "/category/category-create";
+        }
         categoryService.save(categoryDTO);
         return "redirect:/categories/list";
     }
