@@ -9,7 +9,7 @@ import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -50,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO save(CategoryDTO categoryDTO) {
         Category category = mapperUtil.convert(categoryDTO, new Category());
+        category.setCompany(mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company()));
         categoryRepository.save(category);
         return mapperUtil.convert(category, new CategoryDTO());
     }
