@@ -72,6 +72,13 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(categoryInDb);
     }
 
+    @Override
+    public boolean isCategoryDescriptionUnique(CategoryDTO categoryDTO) {
+        Category existingCategory= (Category) categoryRepository.findAllByCompany_IdOrderByDescriptionAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+        if (existingCategory == null) return false;
+        return !existingCategory.getId().equals(categoryDTO.getId());
+    }
+
 }
 
 /*
