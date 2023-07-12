@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.context.annotation.Bean;
 
 import javax.validation.constraints.*;
 
@@ -38,6 +39,7 @@ public class UserDTO {
     private RoleDTO role;
     @NotNull
     private CompanyDTO company;
+
     private boolean isOnlyAdmin;
 
 
@@ -124,10 +126,15 @@ public class UserDTO {
     }
 
     public boolean isOnlyAdmin() {
+
+
+
         return isOnlyAdmin;
     }
 
     public void setOnlyAdmin(boolean onlyAdmin) {
+
+
         isOnlyAdmin = onlyAdmin;
     }
 }
