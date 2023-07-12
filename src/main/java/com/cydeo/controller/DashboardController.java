@@ -1,9 +1,8 @@
 package com.cydeo.controller;
 
 import com.cydeo.client.CurrencyClient;
-import com.cydeo.dto.ExchangeRates;
-import com.cydeo.dto.currency.Usd;
 import com.cydeo.service.DashboardService;
+import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.InvoiceService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +18,12 @@ import java.util.Map;
 public class DashboardController {
     private final DashboardService dashboardService;
     private final InvoiceService invoiceService;
+private final InvoiceProductService invoiceProductService;
 
-
-    public DashboardController(DashboardService dashboardService, InvoiceService invoiceService, CurrencyClient currencyClient) {
+    public DashboardController(DashboardService dashboardService, InvoiceService invoiceService, CurrencyClient currencyClient, InvoiceProductService invoiceProductService) {
         this.dashboardService = dashboardService;
         this.invoiceService = invoiceService;
+        this.invoiceProductService = invoiceProductService;
     }
 
     @GetMapping
@@ -32,7 +32,7 @@ public class DashboardController {
         Map<String, BigDecimal> summaryNumbers = new HashMap<>();
         summaryNumbers.put("totalCost", dashboardService.sumOfTotalCost());
         summaryNumbers.put("totalSales",dashboardService.sumOfTotalSales());
-        summaryNumbers.put("profitLoss",dashboardService.sumOfTotalProfit_Loss());
+        summaryNumbers.put("profitLoss",invoiceProductService.sumOfTotalProfitLoss());
         model.addAttribute("summaryNumbers",summaryNumbers);
         model.addAttribute("invoices",invoiceService.listAllInvoiceForDashBoard());
 
