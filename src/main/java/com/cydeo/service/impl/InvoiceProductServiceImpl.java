@@ -157,12 +157,3 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         }
     }
 }
-//   .findAllByInvoiceInvoiceStatusAndInvoiceInvoiceTypeAndInvoiceCompanyTitleAndProductIdAndRemainingQuantityGreaterThanEqual
-//                        (InvoiceStatus.APPROVED, InvoiceType.PURCHASE, toBeSoldProduct.getInvoice().getCompany().getTitle()
-//                                , toBeSoldProduct.getProduct().getId(),1);
-// .findAllByProductIdAndInvoiceCompanyTitleAndInvoiceInvoiceStatusAndInvoiceInvoiceType
-//                        (toBeSoldProduct.getProduct().getId(), toBeSoldProduct.getInvoice().getCompany().getTitle()
-//                                ,InvoiceStatus.APPROVED,InvoiceType.PURCHASE);
-// .findAllByInvoiceProductsCompanyProductQuantityGreaterThanZero
-//                        (InvoiceStatus.APPROVED, InvoiceType.PURCHASE, toBeSoldProduct.getInvoice().getCompany().getTitle()
-//                                , toBeSoldProduct.getProduct().getId());
