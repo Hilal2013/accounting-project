@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.controller.CompanyController;
 import com.cydeo.dto.CategoryDTO;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
@@ -7,6 +8,7 @@ import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
+
 import org.springframework.stereotype.Service;
 
 //import java.util.Comparator;
@@ -38,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(category -> mapperUtil.convert(category, new CategoryDTO()))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public CategoryDTO findById(long parseLong) {
@@ -74,10 +77,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean isCategoryDescriptionUnique(CategoryDTO categoryDTO) {
-        Category existingCategory= (Category) categoryRepository.findAllByCompany_IdOrderByDescriptionAsc(companyService.getCompanyDTOByLoggedInUser().getId());
+        Company company=mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company());
+        Category existingCategory= categoryRepository.findByCompanyAndCompany(categoryDTO.getDescription(),company);
         if (existingCategory == null) return false;
         return !existingCategory.getId().equals(categoryDTO.getId());
     }
+
 
 }
 
@@ -100,4 +105,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
     }
 
+
+    public boolean findByDescription(String){
+        Category category= categoryRepository.findByDescription(description);
+        return description !=null;
+    }
  */
