@@ -18,6 +18,7 @@ import com.cydeo.service.InvoiceService;
 import com.cydeo.service.ProductService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -118,6 +119,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
+    @Transactional
     public InvoiceDTO approve(Long id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(()->new InvoiceNotFoundException("Invoice does not exist!."));
         if (invoice.getInvoiceType().getValue().equals(InvoiceType.PURCHASE.getValue())) {
@@ -125,6 +127,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
                 Long productId = invoiceProductDTO.getProduct().getId();
                 Integer amount = invoiceProductDTO.getQuantity();
+                invoiceProductDTO.setRemainingQuantity(amount);
+                invoiceProductService.save(invoiceProductDTO, invoice.getId());
                 productService.increaseProductInventory(productId, amount);
             }
         } else if (invoice.getInvoiceType().getValue().equals(InvoiceType.SALES.getValue())) {
@@ -132,6 +136,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             for (InvoiceProductDTO invoiceProductDTO : invoiceProductDTOList) {
                 Long productId = invoiceProductDTO.getProduct().getId();
                 Integer amount = invoiceProductDTO.getQuantity();
+                invoiceProductService.setProfitLossForInvoiceProduct(invoiceProductDTO);
                 productService.decreaseProductInventory(productId, amount);
             }
         }

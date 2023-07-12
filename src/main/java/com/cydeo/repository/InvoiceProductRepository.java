@@ -3,6 +3,8 @@ package com.cydeo.repository;
 
 import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.entity.InvoiceProduct;
+import com.cydeo.enums.InvoiceStatus;
+import com.cydeo.enums.InvoiceType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +21,18 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct,L
     Integer countProductPurchased(@Param("productId") Long id);
 
     List<InvoiceProduct> findAllByInvoice_IdAndProduct_Id(Long invoiceId, Long productId);
+    List<InvoiceProduct> findAllByInvoiceInvoiceStatusAndInvoiceInvoiceTypeAndInvoiceCompanyTitle(InvoiceStatus invoiceStatus
+            , InvoiceType invoiceType, String companyTitle);
+    @Query(" Select ip from InvoiceProduct ip join Invoice i on ip.id=i.id where i.invoiceStatus=?1 " +
+            "And i.invoiceType=?2 And i.company.title=?3 And ip.product.id=?4 AND ip.remainingQuantity>0 ")
+    List<InvoiceProduct> findAllByInvoiceProductsCompanyProductQuantityGreaterThanZero
+            (@Param("invoiceStatus") InvoiceStatus invoiceStatus, @Param("invoiceType")InvoiceType invoiceType, String title, Long productId);
+    List<InvoiceProduct>
+    findAllByInvoiceInvoiceStatusAndInvoiceInvoiceTypeAndInvoiceCompanyTitleAndProductIdAndRemainingQuantityGreaterThanEqual
+            (InvoiceStatus invoice_invoiceStatus, InvoiceType invoice_invoiceType,
+             String invoice_company_title, Long product_id, int remainingQuantity);
 
-
+    List<InvoiceProduct>  findAllByProductIdAndInvoiceCompanyTitleAndInvoiceInvoiceStatusAndInvoiceInvoiceType
+            (Long productId, String companyTitle,InvoiceStatus invoiceStatus, InvoiceType invoiceType);
 
 }

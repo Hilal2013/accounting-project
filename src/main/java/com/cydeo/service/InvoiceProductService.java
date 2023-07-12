@@ -5,6 +5,7 @@ import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.enums.InvoiceType;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface InvoiceProductService {
@@ -14,6 +15,7 @@ public interface InvoiceProductService {
     InvoiceProductDTO findById(Long id);
     InvoiceProductDTO findByInvoiceId(Long id);
     InvoiceProductDTO delete(Long invoiceProductId);
-
+    BigDecimal sumOfTotalProfitLoss();
+    void setProfitLossForInvoiceProduct(InvoiceProductDTO toBeSoldProduct);
 
 }
