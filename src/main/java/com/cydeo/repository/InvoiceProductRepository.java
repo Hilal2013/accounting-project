@@ -41,4 +41,7 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct,L
 
     List<InvoiceProduct> findAllByInvoiceInvoiceStatusAndInvoiceInvoiceTypeAndInvoiceCompany(InvoiceStatus invoiceStatus
             , InvoiceType invoiceType, Company company);
+
+
+    List<InvoiceProduct> findAllByInvoiceInvoiceStatusAndInvoiceCompanyOrderByInvoiceInsertDateTimeDesc(InvoiceStatus invoiceStatus,Company company);
 }

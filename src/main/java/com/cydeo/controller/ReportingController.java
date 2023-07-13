@@ -1,4 +1,5 @@
 package com.cydeo.controller;
+import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.service.ReportingService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,12 @@ public class ReportingController {
         return "/report/profit-loss-report";
 
     }
+    @GetMapping("/stockData")
+   public String getStockReport(Model model){
+   //model.addAttribute("invoiceProducts",reportingService.getAllStockReport());
+        model.addAttribute("invoiceProducts",reportingService.getAllStockReport());
+       return "/report/stock-report";
+   }
 
 
 }
