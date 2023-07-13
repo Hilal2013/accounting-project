@@ -11,15 +11,12 @@
     <div class="dashboard-ecommerce">
       <div class="container-fluid dashboard-content">
         <div class="ecommerce-widget">
-          <h3 th:if='${error}' th:text='${error}' style='color: red;'></h3>
-          <div th:unless='${error}'>
-            <h3 style='color: green;'>Success!</h3>
-            <div>Id.: <span th:text='${id}' /></div>
-            <div>Status: <span th:text='${status}' /></div>
-            <div>Charge id.: <span th:text='${chargeId}' /></div>
-            <div>Balance transaction id.: <span th:text='${balance_transaction}' /></div>
+          <div>
+            <h3 style='color: green;'>Payment is successful:</h3>
+            <div>Charge id : <span th:text='${chargeId}' /></div>
+            <div>Description : <span th:text='${description}' /></div>
           </div>
-          <a href='/checkout.html'>Checkout again</a>
+          <a th:href="@{/payments/list}">Membership Payment</a>
         </div>
       </div>
     </div>

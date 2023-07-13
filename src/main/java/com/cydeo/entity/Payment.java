@@ -21,9 +21,17 @@ public class Payment extends BaseEntity{
     private LocalDate paymentDate;
     private boolean isPaid;
     private String companyStripedId;//(to store stripe id's about payments)
+    @Enumerated(EnumType.STRING)
     private Months month;
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-
+    public Payment(int year, BigDecimal amount, LocalDate paymentDate, boolean isPaid, Months month, Company company) {
+        this.year = year;
+        this.amount = amount;
+        this.paymentDate = paymentDate;
+        this.isPaid = isPaid;
+        this.month = month;
+        this.company = company;
+    }
 }
