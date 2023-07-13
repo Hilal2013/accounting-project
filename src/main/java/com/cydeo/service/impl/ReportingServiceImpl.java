@@ -12,6 +12,7 @@ import com.cydeo.service.InvoiceProductService;
 import com.cydeo.service.ReportingService;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,14 @@ public class ReportingServiceImpl implements ReportingService {
         return mapMonthlyProfitLoss;
 
 
+    }
+
+    @Override
+    public List<InvoiceProductDTO> getAllStockReport() {
+        CompanyDTO companyDTO=companyService.getCompanyDTOByLoggedInUser();
+        Company company=mapperUtil.convert(companyDTO,new Company());
+        List<InvoiceProduct> list=invoiceProductRepository.findAllByInvoiceInvoiceStatusAndInvoiceCompanyOrderByInvoiceInsertDateTimeDesc(InvoiceStatus.APPROVED,company);
+        return list.stream().map(invoiceProduct -> mapperUtil.convert(invoiceProduct,new InvoiceProductDTO())).collect(Collectors.toList());
     }
 }
 
