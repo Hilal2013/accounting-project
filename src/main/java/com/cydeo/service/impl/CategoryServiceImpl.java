@@ -78,11 +78,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public boolean isCategoryDescriptionUnique(CategoryDTO categoryDTO) {
         Company company=mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company());
-        Category existingCategory= categoryRepository.findByCompanyAndCompany(categoryDTO.getDescription(),company);
+        Category existingCategory= categoryRepository.findByDescriptionAndCompany(categoryDTO.getDescription(),company);
         if (existingCategory == null) return false;
         return !existingCategory.getId().equals(categoryDTO.getId());
     }
-
 
 }
 
