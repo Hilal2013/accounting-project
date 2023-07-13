@@ -46,9 +46,10 @@ public class CompanyServiceImplIntegrationTest {
         User loggedInUser = new User();
         loggedInUser.setCompany(new Company());
         loggedInUser.getCompany().setId(1L);
-
         when(securityService.getLoggedInUser()).thenReturn((mapperUtil.convert(loggedInUser,new UserDTO())));
         when(companyRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(CompanyNotFoundException.class, () -> companyService.getCompanyDTOByLoggedInUser());
     }
+
+
 }

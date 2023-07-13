@@ -78,7 +78,7 @@ class CompanyServiceImplTest {
     }
 
     @Test
-    void should_throw_exception_when_company_cannot_find() {
+    void should_throw_exception_when_company_not_exist() {
 
         when(companyRepository.findById(company.getId())).thenReturn(Optional.empty());
         assertThrows(CompanyNotFoundException.class, () -> companyService.findById(company.getId()));
@@ -88,7 +88,7 @@ class CompanyServiceImplTest {
     }
 
     @Test
-    void should_find_companyDTo_by_loggedUser() {
+    void should_find_companyDT0_by_loggedUser() {
         User loggedInUser=new User();
       loggedInUser.setCompany(company);
       loggedInUser.getCompany().setId(company.getId());
