@@ -4,6 +4,7 @@ import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.dto.ProductDTO;
 import com.cydeo.entity.Product;
+import com.cydeo.exception.InvoiceProductNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.mapper.ProductMapper;
 import com.cydeo.repository.ProductRepository;
@@ -118,7 +119,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO decreaseProductInventory(Long id, Integer amount) {
         Product product = productRepository.findById(id).orElseThrow();
-        product.setQuantityInStock(product.getQuantityInStock() - amount);
+        int quantityInStock = product.getQuantityInStock();
+        if (quantityInStock < amount) throw new InvoiceProductNotFoundException("You can sell " + quantityInStock +
+                " amount of " + product.getName());
+        product.setQuantityInStock(quantityInStock - amount);
         return productMapper.convertToDto(product);
     }
 
