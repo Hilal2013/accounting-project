@@ -1,7 +1,10 @@
 package com.cydeo.service.unit;
 
 import com.cydeo.dto.CompanyDTO;
+import com.cydeo.dto.UserDTO;
+import com.cydeo.entity.Address;
 import com.cydeo.entity.Company;
+import com.cydeo.entity.User;
 import com.cydeo.enums.CompanyStatus;
 import com.cydeo.exception.CompanyNotFoundException;
 import com.cydeo.mapper.MapperUtil;
@@ -16,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
@@ -60,21 +65,56 @@ class CompanyServiceImplTest {
         companyDTO.setPhone("123456");
         companyDTO.setWebsite("abc@gmail.com");
         companyDTO.setCompanyStatus(CompanyStatus.PASSIVE);
+        companyDTO.getAddress().setCountry("China");
+
     }
 
     @Test
     void should_find_company_by_id() {
         when(companyRepository.findById(company.getId())).thenReturn(Optional.of(company));
-        CompanyDTO actualCompanyDTO=companyService.findById(company.getId());
+        CompanyDTO actualCompanyDTO = companyService.findById(company.getId());
         assertNotNull(actualCompanyDTO);
         assertEquals(company.getId(), actualCompanyDTO.getId());
     }
 
     @Test
     void should_throw_exception_when_company_cannot_find() {
-        // Mock the repository method
+
         when(companyRepository.findById(company.getId())).thenReturn(Optional.empty());
-        // Call the service method and assert that it throws the expected exception
         assertThrows(CompanyNotFoundException.class, () -> companyService.findById(company.getId()));
+//        Throwable throwable = catchThrowable( () -> companyService.findById(0L));
+//        assertInstanceOf(CompanyNotFoundException.class, throwable);
+//        assertEquals("Company couldn't find." , throwable.getMessage());
     }
+
+    @Test
+    void should_find_companyDTo_by_loggedUser() {
+        User loggedInUser=new User();
+      loggedInUser.setCompany(company);
+      loggedInUser.getCompany().setId(company.getId());
+
+       when(securityService.getLoggedInUser()).thenReturn(mapperUtil.convert(loggedInUser,new UserDTO()));
+        when(companyRepository.findById(securityService.getLoggedInUser().getCompany().getId())).thenReturn(Optional.of(company));
+        CompanyDTO actualCompanyDTO=companyService.getCompanyDTOByLoggedInUser();
+        verify(securityService,times(1)).getLoggedInUser();
+        verify(companyRepository,atLeast(1)).findById(company.getId());
+        assertEquals(companyDTO,actualCompanyDTO);
+    }
+    @Test
+    void should_list_all_companies() {
+        //stub
+
+
+        }
+    @Test
+    void should_save_company(){
+        company.setCompanyStatus(CompanyStatus.PASSIVE);
+when(companyRepository.save(any())).thenReturn(company);
+CompanyDTO actualCompanyDTO=companyService.createCompany(companyDTO);
+        assertThat(actualCompanyDTO).usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(companyDTO);
+
+    }
+
+
+
 }
