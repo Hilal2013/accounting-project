@@ -22,9 +22,8 @@ public class ReportingController {
 
     }
     @GetMapping("/stockData")
-   public String getStockReport(Model model){
-   //model.addAttribute("invoiceProducts",reportingService.getAllStockReport());
-        model.addAttribute("invoiceProducts",reportingService.getAllStockReport());
+    public String getStockReport(Model model){
+    model.addAttribute("invoiceProducts",reportingService.getAllStockReport());
        return "/report/stock-report";
    }
 
