@@ -210,6 +210,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     }
 
+    @Override
+    public boolean existsByClientVendorId(Long id) {
+        return invoiceRepository.existsByCompanyAndAndClientVendorId
+                (mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(),new Company()),id);
+    }
 
 
 }

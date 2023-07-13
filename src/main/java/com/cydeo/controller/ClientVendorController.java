@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -86,9 +87,14 @@ public class ClientVendorController {
 
     //soft delete
     @GetMapping("/delete/{id}")
-    public String deleteClientVendor(@PathVariable("id") Long id) {
+    public String deleteClientVendor(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        if (clientVendorService.isClientVendorHasInvoice(id)) {
+redirectAttributes.addFlashAttribute
+        ("message", "Client or Vendor has invoice. You cannot delete this ClientVendor");
+            return "redirect:/clientVendors/list";
 
-        clientVendorService.delete(id);
+        }
+            clientVendorService.delete(id);
         return "redirect:/clientVendors/list";
     }
 }

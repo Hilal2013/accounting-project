@@ -20,4 +20,5 @@ public interface ClientVendorService {
     List<ClientVendorDTO>  listAllClientVendor(ClientVendorType vendor);
 
     boolean isExistClientVendorByCompanyName(ClientVendorDTO clientVendorDTO);
+    boolean isClientVendorHasInvoice(Long id);
 }
