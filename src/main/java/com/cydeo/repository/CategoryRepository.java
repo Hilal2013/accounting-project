@@ -10,7 +10,7 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByCompany_IdOrderByDescriptionAsc(Long id);
 
-    Category findByCompanyAndCompany(String Description, Company company);
+    Category findByDescriptionAndCompany(String Description, Company company);
 
     //    List<Category> listAllCategoriesByCompany(Company company);
 }
