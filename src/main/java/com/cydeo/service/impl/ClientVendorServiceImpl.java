@@ -5,6 +5,7 @@ import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.ClientVendorType;
+import com.cydeo.exception.ClientVendorNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.ClientVendorService;
@@ -33,7 +34,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public ClientVendorDTO findById(Long id) {
         return mapperUtil.convert(clientVendorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find.")), new ClientVendorDTO());
+                .orElseThrow(() -> new ClientVendorNotFoundException("Client or Vendor couldn't find.")), new ClientVendorDTO());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public ClientVendorDTO updateClientVendor(Long id, ClientVendorDTO clientVendorDTO) {
         ClientVendor clientVendor = clientVendorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find"));
+                .orElseThrow(() -> new ClientVendorNotFoundException("Client or Vendor couldn't find"));
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
         convertedClientVendor.setCompany(clientVendor.getCompany());
