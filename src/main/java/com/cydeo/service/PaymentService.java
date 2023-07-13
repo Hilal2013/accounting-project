@@ -11,6 +11,8 @@ public interface PaymentService {
 
     List<PaymentDTO> paymentDTOList(int year);
 
+    PaymentDTO findPaymentDTOById(Long id);
     Charge charge(ChargeRequest chargeRequest, Long id) throws AuthenticationException, InvalidRequestException,
             APIConnectionException, CardException, APIException;
+    Integer findYear(Integer year);
 }

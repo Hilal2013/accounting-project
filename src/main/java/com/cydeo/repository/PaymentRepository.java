@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
-    List<Payment> findAllByYearOrderByMonthAsc(int year);
+    List<Payment> findAllByYear(int year);
 
 }

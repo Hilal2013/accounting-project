@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 
 @Controller
 @RequestMapping("/payments")
@@ -25,16 +26,16 @@ public class PaymentController {
     }
 
     @GetMapping("/list")
-    public String listPayment(Model model, @RequestParam(value = "year", required = false, defaultValue = "2023") Integer year) {
-        model.addAttribute("payments", paymentService.paymentDTOList(year));
-        model.addAttribute("localDateTime", LocalDateTime.MIN);
-        model.addAttribute("year", year);
+    public String listPayment(Model model, @RequestParam(value = "year", required = false) Integer year) {
+        int selectedYear = paymentService.findYear(year);
+        model.addAttribute("payments", paymentService.paymentDTOList(selectedYear));
+        model.addAttribute("year", selectedYear);
         return "payment/payment-list";
     }
 
-    @GetMapping("/newpayment/{modelId}")
-    public String newPayment(@PathVariable("modelId") Long id, Model model) {
-        model.addAttribute("amount", 250 * 100); // in cents
+    @GetMapping("/newpayment/{monthId}")
+    public String newPayment(@PathVariable("monthId") Long id, Model model) {
+        model.addAttribute("payment", paymentService.findPaymentDTOById(id)); // in cents
         model.addAttribute("stripePublicKey", stripePublicKey);
         model.addAttribute("currency", Currency.USD);
         return "payment/payment-method";
@@ -46,16 +47,9 @@ public class PaymentController {
         chargeRequest.setDescription("Example charge");
         chargeRequest.setCurrency(Currency.USD);
         Charge charge = paymentService.charge(chargeRequest, id);
-        model.addAttribute("id", charge.getId());
-        model.addAttribute("status", charge.getStatus());
+        model.addAttribute("description", charge.getDescription());
         model.addAttribute("chargeId", charge.getId());
-        model.addAttribute("balance_transaction", charge.getBalanceTransaction());
         return "payment/payment-result";
-    }
-
-    @GetMapping("/toInvoice/{id}")
-    public String toInvoice(@PathVariable Long id) {
-
     }
 
 }

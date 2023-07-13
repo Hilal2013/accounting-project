@@ -26,11 +26,12 @@ public class Payment extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    public Payment(int year, BigDecimal amount, LocalDate paymentDate, boolean isPaid, Months month) {
+    public Payment(int year, BigDecimal amount, LocalDate paymentDate, boolean isPaid, Months month, Company company) {
         this.year = year;
         this.amount = amount;
         this.paymentDate = paymentDate;
         this.isPaid = isPaid;
         this.month = month;
+        this.company = company;
     }
 }
