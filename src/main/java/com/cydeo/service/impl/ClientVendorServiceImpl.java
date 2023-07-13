@@ -5,10 +5,12 @@ import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.ClientVendorType;
+import com.cydeo.exception.ClientVendorNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.ClientVendorService;
 import com.cydeo.service.CompanyService;
+import com.cydeo.service.InvoiceService;
 import com.cydeo.service.SecurityService;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +23,21 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     private final MapperUtil mapperUtil;
     private final CompanyService companyService;
     private final SecurityService securityService;
+    private final InvoiceService invoiceService;
 
     public ClientVendorServiceImpl(ClientVendorRepository clientVendorRepository,
-                                   MapperUtil mapperUtil, CompanyService companyService, SecurityService securityService) {
+                                   MapperUtil mapperUtil, CompanyService companyService, SecurityService securityService, InvoiceService invoiceService) {
         this.clientVendorRepository = clientVendorRepository;
         this.mapperUtil = mapperUtil;
         this.companyService = companyService;
         this.securityService = securityService;
+        this.invoiceService = invoiceService;
     }
 
     @Override
     public ClientVendorDTO findById(Long id) {
         return mapperUtil.convert(clientVendorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find.")), new ClientVendorDTO());
+                .orElseThrow(() -> new ClientVendorNotFoundException("Client or Vendor couldn't find.")), new ClientVendorDTO());
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ClientVendorServiceImpl implements ClientVendorService {
     @Override
     public ClientVendorDTO updateClientVendor(Long id, ClientVendorDTO clientVendorDTO) {
         ClientVendor clientVendor = clientVendorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ClientVendor couldn't find"));
+                .orElseThrow(() -> new ClientVendorNotFoundException("Client or Vendor couldn't find"));
         ClientVendor convertedClientVendor = mapperUtil.convert(clientVendorDTO, new ClientVendor());
         convertedClientVendor.setId(clientVendor.getId());
         convertedClientVendor.setCompany(clientVendor.getCompany());
@@ -95,13 +99,21 @@ public class ClientVendorServiceImpl implements ClientVendorService {
 
     @Override
     public boolean isExistClientVendorByCompanyName(ClientVendorDTO clientVendorDTO) {
-        // pass CV name and Company(convert).title
+        Company company = mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company());
+
         ClientVendor clientVendor = clientVendorRepository
                 .findByClientVendorNameAndCompany(clientVendorDTO.getClientVendorName(),
-                mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company()));
+                company);
         if (clientVendor == null) return false;
-        return !clientVendor.getId().equals(clientVendorDTO.getId());
 
+        return clientVendor.getClientVendorType().equals(clientVendorDTO.getClientVendorType())
+                &&!clientVendor.getId().equals(clientVendorDTO.getId());
+
+    }
+
+    @Override
+    public boolean isClientVendorHasInvoice(Long id) {
+        return invoiceService.existsByClientVendorId(id);
     }
 
 }
