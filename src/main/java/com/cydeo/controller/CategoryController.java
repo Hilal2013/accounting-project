@@ -53,8 +53,8 @@ public class CategoryController {
         return "category/category-update";
     }
 
-    @PostMapping("/update/{categoryId}")
-    public String showPageEditCategory(@PathVariable("categoryId") Long categoryId,
+    @PostMapping("/update/{id}")
+    public String showPageEditCategory(@PathVariable("id") Long id,
                                        @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
                                        BindingResult bindingResult, Model model){
         boolean categoryDescriptionNotUnique = categoryService.isCategoryDescriptionUnique(categoryDTO);
@@ -64,7 +64,7 @@ public class CategoryController {
         if (bindingResult.hasErrors()) {
             return "category/category-update";
         }
-        categoryService.updateCategory(categoryId, categoryDTO);
+        categoryService.updateCategory(id, categoryDTO);
         return "redirect:/categories/list";
     }
 
