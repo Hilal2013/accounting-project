@@ -35,7 +35,14 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public String createCategory(@ModelAttribute("newCategory")CategoryDTO categoryDTO, Model model){
+    public String createCategory(@Valid @ModelAttribute("newCategory")CategoryDTO categoryDTO, BindingResult bindingResult){
+        boolean categoryDescriptionNotUnique=categoryService.isCategoryDescriptionUnique(categoryDTO);
+        if (categoryDescriptionNotUnique){
+            bindingResult.rejectValue("description", " ", "This description is already exists.");
+        }
+        if (bindingResult.hasErrors()){
+            return "/category/category-create";
+        }
         categoryService.save(categoryDTO);
         return "redirect:/categories/list";
     }
@@ -46,15 +53,18 @@ public class CategoryController {
         return "category/category-update";
     }
 
-    @PostMapping("/update/{categoryId}")
-    public String updateCategory(@PathVariable("categoryId") Long categoryId,
-                                 @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
-                                 BindingResult bindingResult, Model model) {
-
+    @PostMapping("/update/{id}")
+    public String showPageEditCategory(@PathVariable("id") Long id,
+                                       @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+                                       BindingResult bindingResult, Model model){
+        boolean categoryDescriptionNotUnique = categoryService.isCategoryDescriptionUnique(categoryDTO);
+        if (categoryDescriptionNotUnique) {
+            bindingResult.rejectValue("description", " ", "This description is already exists.");
+        }
         if (bindingResult.hasErrors()) {
             return "category/category-update";
         }
-        categoryService.updateCategory(categoryId,categoryDTO);
+        categoryService.updateCategory(id, categoryDTO);
         return "redirect:/categories/list";
     }
 
@@ -66,7 +76,8 @@ public class CategoryController {
         return "redirect:/categories/list";
     }
 
-}
+    }
+
 
 /*
 
@@ -104,4 +115,68 @@ public class CategoryController {
         model.addAttribute("categories", categoryService.listAllCategories());
         return "/category/category-list";
     }
+
+     @GetMapping("/update/{categoryId}") // 13 July 2023
+    public String showPageEditCategory(@PathVariable("categoryId") Long categoryId, Model model) {
+        model.addAttribute("category",categoryService.findById(categoryId));
+        return "category/category-update";
+    }
+
+    @PostMapping("/update/{categoryId}")
+    public String updateCategory(@PathVariable("categoryId") Long categoryId,
+                                 @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+                                 BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "category/category-update";
+        }
+        categoryService.updateCategory(categoryId,categoryDTO);
+        return "redirect:/categories/list";
+    }
+    ///
+
+
+    @GetMapping("/delete/{categoryId}")
+    public String deleteCategory(@PathVariable("categoryId") Long categoryId){
+
+        categoryService.delete(categoryId);
+
+        return "redirect:/categories/list";
+    }
+
+}
+
+
+    @PostMapping("/update/{categoryId}")--> was working?????
+    public String updateCategory(@PathVariable("categoryId") Long categoryId,
+                                 @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+                                 BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "category/category-update";
+        }
+        categoryService.updateCategory(categoryId,categoryDTO);
+        return "redirect:/categories/list";
+    }
+
  */
+
+    /*
+    @PostMapping("/update/{id}")
+
+    public String updateCategory(@PathVariable("id") Long id,
+                                 @Valid @ModelAttribute("category") CategoryDTO categoryDTO,
+                                 BindingResult bindingResult, Model model) {
+
+        boolean categoryDescriptionNotUnique=categoryService.isCategoryDescriptionUnique(categoryDTO);
+        if (categoryDescriptionNotUnique){
+            bindingResult.rejectValue("description", " ", "This description is already exists.");
+        }
+        if (bindingResult.hasErrors()) {
+            return "category/category-update";
+        }
+        categoryService.updateCategory(id,categoryDTO);
+        return "redirect:/categories/list";
+    }
+
+     */

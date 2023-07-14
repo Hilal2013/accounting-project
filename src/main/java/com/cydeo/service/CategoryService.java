@@ -17,6 +17,8 @@ public interface CategoryService {
 
     void delete(Long categoryId);
 
- //   List<CategoryDTO> listAllCategoriesByCompany();
+    boolean isCategoryDescriptionUnique(CategoryDTO categoryDTO);
+
+    //   List<CategoryDTO> listAllCategoriesByCompany();
 
 }
