@@ -90,7 +90,7 @@ public class ClientVendorController {
     public String deleteClientVendor(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         if (clientVendorService.isClientVendorHasInvoice(id)) {
 redirectAttributes.addFlashAttribute
-        ("message", "Client or Vendor has invoice. You cannot delete this ClientVendor");
+        ("error", "Client or Vendor has invoice. You cannot delete this ClientVendor");
             return "redirect:/clientVendors/list";
 
         }
