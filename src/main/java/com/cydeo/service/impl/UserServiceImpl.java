@@ -8,6 +8,7 @@ import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.UserRepository;
 import com.cydeo.service.SecurityService;
 import com.cydeo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,16 +56,30 @@ public class UserServiceImpl implements UserService {
             return userList.stream()
                     .filter(user -> user.getCompany().getId().equals(securityService.getLoggedInUser().getCompany().getId()))
                     .map(user -> mapperUtil.convert(user, new UserDTO()))
+                    .peek(dto -> {
+                        if (dto.getRole().getDescription().equals("Admin"))
+                            dto.setOnlyAdmin(this.checkIfOnlyAdminForCompany(dto));
+                        else dto.setOnlyAdmin(false);
+                    })
                     .collect(Collectors.toList());
         } else if (securityService.getLoggedInUser().getRole().getDescription().equalsIgnoreCase("root user")) {
             return userList.stream()
 
                     .filter(user -> user.getRole().getDescription().equalsIgnoreCase("admin"))
                     .map(user -> mapperUtil.convert(user, new UserDTO()))
+                    .peek(dto -> {
+                        if (dto.getRole().getDescription().equals("Admin"))
+                            dto.setOnlyAdmin(this.checkIfOnlyAdminForCompany(dto));
+                        else dto.setOnlyAdmin(false);
+                    })
                     .collect(Collectors.toList());
         } else {
-            return userList.stream().map(user -> mapperUtil.convert(user, new UserDTO())).collect(Collectors.toList());
+            return null;
         }
+    }
+
+    private boolean checkIfOnlyAdminForCompany(UserDTO dto) {
+        return userRepository.countAllByCompanyAndRole_Description(mapperUtil.convert(dto.getCompany(), new Company()), "Admin")==1;
     }
 
     @Override

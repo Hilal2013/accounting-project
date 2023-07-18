@@ -1,5 +1,6 @@
 package com.cydeo.service.impl;
 
+import com.cydeo.controller.CompanyController;
 import com.cydeo.dto.CategoryDTO;
 import com.cydeo.entity.Category;
 import com.cydeo.entity.Company;
@@ -7,9 +8,10 @@ import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.CategoryRepository;
 import com.cydeo.service.CategoryService;
 import com.cydeo.service.CompanyService;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
+//import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public CategoryDTO findById(long parseLong) {
 
@@ -50,6 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO save(CategoryDTO categoryDTO) {
         Category category = mapperUtil.convert(categoryDTO, new Category());
+        category.setCompany(mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company()));
         categoryRepository.save(category);
         return mapperUtil.convert(category, new CategoryDTO());
     }
@@ -69,6 +73,14 @@ public class CategoryServiceImpl implements CategoryService {
         categoryInDb.setIsDeleted(true);
         categoryInDb.setDescription(categoryInDb.getDescription()+"-"+categoryInDb.getId());
         categoryRepository.save(categoryInDb);
+    }
+
+    @Override
+    public boolean isCategoryDescriptionUnique(CategoryDTO categoryDTO) {
+        Company company=mapperUtil.convert(companyService.getCompanyDTOByLoggedInUser(), new Company());
+        Category existingCategory= categoryRepository.findByDescriptionAndCompany(categoryDTO.getDescription(),company);
+        if (existingCategory == null) return false;
+        return !existingCategory.getId().equals(categoryDTO.getId());
     }
 
 }
@@ -92,4 +104,9 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
     }
 
+
+    public boolean findByDescription(String){
+        Category category= categoryRepository.findByDescription(description);
+        return description !=null;
+    }
  */

@@ -24,4 +24,6 @@ public interface InvoiceService {
     String findInvoiceId();
 
     List<InvoiceDTO> listAllInvoiceForDashBoard();
+    boolean existsByClientVendorId(Long id);
+
 }

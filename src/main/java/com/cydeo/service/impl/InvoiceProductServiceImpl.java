@@ -5,6 +5,8 @@ import com.cydeo.dto.InvoiceDTO;
 import com.cydeo.dto.InvoiceProductDTO;
 import com.cydeo.entity.InvoiceProduct;
 import com.cydeo.entity.Product;
+import com.cydeo.enums.InvoiceStatus;
+import com.cydeo.enums.InvoiceType;
 import com.cydeo.exception.InvoiceNotFoundException;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.InvoiceProductRepository;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -88,5 +91,69 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         InvoiceProductDTO invoiceProductDTO=mapperUtil.convert(invoiceProduct,new InvoiceProductDTO());
         return invoiceProductDTO;
     }
+    @Override
+    public BigDecimal sumOfTotalProfitLoss() {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository
+                .findAllByInvoiceInvoiceStatusAndInvoiceInvoiceTypeAndInvoiceCompanyTitle(InvoiceStatus.APPROVED,
+                        InvoiceType.SALES, companyService.getCompanyDTOByLoggedInUser().getTitle());
+        BigDecimal sumOfTotalProfitLoss = BigDecimal.ZERO;
+        for (InvoiceProduct invoiceProduct : invoiceProducts) {
+            sumOfTotalProfitLoss = sumOfTotalProfitLoss.add(invoiceProduct.getProfitLoss());
+        }
 
+        return sumOfTotalProfitLoss;
+
+    }
+
+    public void setProfitLossForInvoiceProduct(InvoiceProductDTO toBeSoldProduct) {
+        // Get all aproved purchased Invoice_Products by company and product id  which remaining quantity is not ZERO...
+        List<InvoiceProduct> listOfApprovedPurchasedProducts = invoiceProductRepository
+                .findAllByInvoiceProductsCompanyProductQuantityGreaterThanZero
+                        (InvoiceStatus.APPROVED, InvoiceType.PURCHASE, toBeSoldProduct.getInvoice().getCompany().getTitle()
+                                , toBeSoldProduct.getProduct().getId());
+
+        listOfApprovedPurchasedProducts.sort(Comparator.comparing(p -> p.getInvoice().getDate()));//asc orderby date
+
+        BigDecimal profitLoss = BigDecimal.ZERO;
+        toBeSoldProduct.setProfitLoss(profitLoss);
+        toBeSoldProduct.setRemainingQuantity(toBeSoldProduct.getQuantity());
+        for (InvoiceProduct purchasedProduct : listOfApprovedPurchasedProducts) {
+
+            //calculate tax
+            BigDecimal soldProductTax = toBeSoldProduct.getPrice()
+                    .multiply(BigDecimal.valueOf(toBeSoldProduct.getTax())).divide(BigDecimal.valueOf(100));
+            BigDecimal purchasedProductTax = purchasedProduct.getPrice()
+                    .multiply(BigDecimal.valueOf(purchasedProduct.getTax())).divide(BigDecimal.valueOf(100));
+            if (purchasedProduct.getRemainingQuantity() >= toBeSoldProduct.getRemainingQuantity()) {
+                //calculate how much money we spent to buy/purchase And how much money we earned from this sale
+                //calculate profit loss
+                profitLoss = (toBeSoldProduct.getPrice().add(soldProductTax).subtract(purchasedProduct.getPrice()
+                        .add(purchasedProductTax))).multiply(BigDecimal.valueOf(toBeSoldProduct.getRemainingQuantity()));
+                // Add new profit/loss
+                BigDecimal updatedProfitLoss = toBeSoldProduct.getProfitLoss().add(profitLoss);
+                //set
+                toBeSoldProduct.setProfitLoss(updatedProfitLoss);
+                // Set the remaining quantity
+                purchasedProduct.setRemainingQuantity(purchasedProduct.getRemainingQuantity() - toBeSoldProduct.getRemainingQuantity());
+                toBeSoldProduct.setRemainingQuantity(0);
+                // Save (update) the purchaseInvoiceProduct and salesInvoiceProduct to the database
+                invoiceProductRepository.save(purchasedProduct);
+                invoiceProductRepository.save(mapperUtil.convert(toBeSoldProduct, new InvoiceProduct()));
+                break;
+            } else {
+                profitLoss = (toBeSoldProduct.getPrice().add(soldProductTax).subtract(purchasedProduct.getPrice()
+                        .add(purchasedProductTax))).multiply(BigDecimal.valueOf(purchasedProduct.getRemainingQuantity()));
+                BigDecimal updatedProfitLoss = toBeSoldProduct.getProfitLoss().add(profitLoss);
+                toBeSoldProduct.setProfitLoss(updatedProfitLoss);
+
+                toBeSoldProduct.setRemainingQuantity(toBeSoldProduct.getRemainingQuantity() - purchasedProduct.getRemainingQuantity());
+                purchasedProduct.setRemainingQuantity(0);
+                // Save (update) the purchaseInvoiceProduct and salesInvoiceProduct to the database
+                invoiceProductRepository.save(purchasedProduct);
+                invoiceProductRepository.save(mapperUtil.convert(toBeSoldProduct, new InvoiceProduct()));
+            }
+
+
+        }
+    }
 }
