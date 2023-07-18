@@ -1,9 +1,9 @@
 package com.cydeo.controller;
 
 import com.cydeo.dto.ClientVendorDTO;
-import com.cydeo.dto.CompanyDTO;
 import com.cydeo.enums.ClientVendorType;
 import com.cydeo.service.ClientVendorService;
+import com.cydeo.service.CompanyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,9 +18,10 @@ import java.util.List;
 @RequestMapping("/clientVendors")
 public class ClientVendorController {
     private final ClientVendorService clientVendorService;
-
-    public ClientVendorController(ClientVendorService clientVendorService) {
+private final CompanyService companyService;
+    public ClientVendorController(ClientVendorService clientVendorService, CompanyService companyService) {
         this.clientVendorService = clientVendorService;
+        this.companyService = companyService;
     }
 
     @GetMapping("/list")
@@ -33,8 +34,7 @@ public class ClientVendorController {
     public String createClientVendor(Model model) {
         model.addAttribute("newClientVendor", new ClientVendorDTO());
         model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
-        //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
         return "clientVendor/clientVendor-create";
     }
 
@@ -42,6 +42,7 @@ public class ClientVendorController {
     public String saveCompany(@Valid @ModelAttribute("newClientVendor") ClientVendorDTO clientVendorDTO, BindingResult bindingResult, Model model) {
 
         model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
+        model.addAttribute("countries", companyService.retrieveCountryList());
 
         // should be unique in current company client/vendors
 
@@ -62,15 +63,14 @@ public class ClientVendorController {
     public String editClientVendorForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("clientVendor", clientVendorService.findById(id));
         model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
-        //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
         return "/clientVendor/clientVendor-update";
     }
 
     @PostMapping("update/{id}")
     public String updateClientVendor(@PathVariable("id") Long id, @Valid @ModelAttribute("clientVendor") ClientVendorDTO clientVendorDTO, BindingResult bindingResult, Model model) {
         //TODO Countries will be provided by a third party API by consuming it.
-        model.addAttribute("countries", List.of("USA", "UK", "Germany"));
+        model.addAttribute("countries", companyService.retrieveCountryList());
         model.addAttribute("clientVendorTypes", Arrays.asList(ClientVendorType.values()));
         clientVendorDTO.setId(id);
         // should be unique in current company client/vendors
