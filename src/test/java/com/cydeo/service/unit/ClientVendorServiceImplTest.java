@@ -1,30 +1,23 @@
 package com.cydeo.service.unit;
-
-import com.cydeo.dto.AddressDTO;
 import com.cydeo.dto.ClientVendorDTO;
 import com.cydeo.dto.CompanyDTO;
 import com.cydeo.entity.ClientVendor;
 import com.cydeo.entity.Company;
 import com.cydeo.enums.ClientVendorType;
-import com.cydeo.enums.CompanyStatus;
 import com.cydeo.mapper.MapperUtil;
 import com.cydeo.repository.ClientVendorRepository;
 import com.cydeo.service.CompanyService;
 import com.cydeo.service.impl.ClientVendorServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
-import org.modelmapper.ModelMapper;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.catchThrowable;
+import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class ClientVendorServiceImplTest {
     @InjectMocks
     private ClientVendorServiceImpl clientVendorService;
@@ -34,49 +27,68 @@ class ClientVendorServiceImplTest {
 
     @Mock
     private CompanyService companyService;
-    @Spy
-    private MapperUtil mapperUtil = new MapperUtil(new ModelMapper());
-    // if you create object we will use spy
-    //this is the object we use//spy=>we are not mocking this is actual one
-    //we dont wanna mock mapper //because spring create beans//
-    ClientVendor clientVendor;
-    ClientVendorDTO clientVendorDTO;
+    @Mock
+    private MapperUtil mapperUtil;
 
-    @BeforeEach
-    void setUp() {
-        clientVendorDTO = new ClientVendorDTO();
-        clientVendorDTO.setId(1L);
-        clientVendorDTO.setClientVendorType(ClientVendorType.CLIENT);
-        clientVendorDTO .setClientVendorName("Tech");
-        //  clientVendorDTO  .setAddress(new AddressDTO());
-        clientVendorDTO.setWebsite("https://www.tech.com");
-        clientVendorDTO.setPhone("123456");
-
-        clientVendor = mapperUtil.convert(clientVendorDTO,new ClientVendor());
-        clientVendor .setId(1L);
-        clientVendor .setClientVendorType(ClientVendorType.CLIENT);
-        clientVendor .setClientVendorName("Tech");
-      //  clientVendor  .setAddress(new AddressDTO());
-        clientVendor .setWebsite("https://www.tech.com");
-        clientVendor.setPhone("123456");
-
+    @Test
+    void shouldReturnFalseWhenCompanyNotExistWithTheName() {
+        CompanyDTO companyDTO = new CompanyDTO();
+        companyDTO.setId(1L);
+        ClientVendorDTO clientVendorDTO = new ClientVendorDTO();
+        clientVendorDTO.setClientVendorName("Tech");
+        when(companyService.getCompanyDTOByLoggedInUser()).thenReturn(companyDTO);
+        Company company = new Company();
+        company.setId(1L);
+        company.setTitle("Cydeo");
+        when(mapperUtil.convert(any(CompanyDTO.class), any(Company.class))).thenReturn(company);
+        when(clientVendorRepository.findByClientVendorNameAndCompany(any(),
+                any(Company.class))).thenReturn(null);
+        boolean result = clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO);
+        assertFalse(result);
     }
-//    @Test
-//    void should_find_clientVendor_by_id() {
-//
-//        when(clientVendorRepository.findById(clientVendor.getId())).thenReturn(Optional.of(clientVendor));
-//        ClientVendorDTO actualClientVendorDTO = clientVendorService.findById(1L);
-//        assertThat(actualClientVendorDTO.getId()).isEqualTo(clientVendor.getId());
-//
-//    }
-//
-//    @Test
-//    void should_throw_exception_when_client_vendor_not_found() {
-//        Throwable throwable = catchThrowable( () -> clientVendorService.findById(0L));
-//        assertInstanceOf(RuntimeException.class, throwable);
-//        assertEquals("ClientVendor couldn't find." , throwable.getMessage());
-//    }
 
+    @Test
+    void shouldReturnFalseWhenCompanyExistsWithTheNameAndIdsAreDifferent() {
+        CompanyDTO companyDTO = new CompanyDTO();
+        companyDTO.setId(1L);
+        when(companyService.getCompanyDTOByLoggedInUser()).thenReturn(companyDTO);
+        Company company = new Company();
+        company.setId(1L);
+        company.setTitle("Cydeo");
+        when(mapperUtil.convert(any(CompanyDTO.class), any(Company.class))).thenReturn(company);
+        ClientVendorDTO clientVendorDTO = new ClientVendorDTO();
+        clientVendorDTO.setClientVendorName("Tech");
+        clientVendorDTO.setId(2L);
+        clientVendorDTO.setClientVendorType(ClientVendorType.CLIENT);
+        ClientVendor clientVendor = new ClientVendor();
+        clientVendor.setId(1L);
+        clientVendor.setClientVendorType(ClientVendorType.CLIENT);
+        when(clientVendorRepository.findByClientVendorNameAndCompany(any(),
+                any(Company.class))).thenReturn(clientVendor);
+        boolean result = clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO);
+        assertTrue(result);
+    }
 
+    @Test
+    void shouldReturnFalseWhenCompanyExistsWithTheNameAndIdsAreSame() {
+        CompanyDTO companyDTO = new CompanyDTO();
+        companyDTO.setId(1L);
+        when(companyService.getCompanyDTOByLoggedInUser()).thenReturn(companyDTO);
+        Company company = new Company();
+        company.setId(1L);
+        company.setTitle("Cydeo");
+        when(mapperUtil.convert(any(CompanyDTO.class), any(Company.class))).thenReturn(company);
+        ClientVendorDTO clientVendorDTO = new ClientVendorDTO();
+        clientVendorDTO.setClientVendorName("Tech");
+        clientVendorDTO.setClientVendorType(ClientVendorType.CLIENT);
+        clientVendorDTO.setId(1L);
+        ClientVendor clientVendor = new ClientVendor();
+        clientVendor.setId(1L);
+        clientVendor.setClientVendorType(ClientVendorType.CLIENT);
+        when(clientVendorRepository.findByClientVendorNameAndCompany(any(),
+                any(Company.class))).thenReturn(clientVendor);
+        boolean result = clientVendorService.isExistClientVendorByCompanyName(clientVendorDTO);
+        assertFalse(result);
+    }
 
 }

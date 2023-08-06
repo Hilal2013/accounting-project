@@ -78,11 +78,4 @@ public class CompanyServiceImplIntegrationTest {
         assertThat(expectedTitles).isEqualTo(actualTitles);
     }
 
-
 }
-//    CompanyDTO companyDTO = new CompanyDTO();
-//        companyDTO.setTitle("TechTurtles");
-//        companyDTO  .setWebsite("www.techTurtles.com");
-//       companyDTO .setId(1L);
-//        companyDTO .setPhone("123456789");
-//        companyDTO .setAddress(new AddressDTO());
